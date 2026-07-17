@@ -499,6 +499,7 @@ renderStamps();
 calc();
 renderHist();
 initInvoiceMeta();
+if(invoiceItems.length===0){ invoiceItems.push(newItemFromCalc()); }
 renderItems();
 
 if('serviceWorker' in navigator){
