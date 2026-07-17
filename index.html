@@ -111,6 +111,8 @@
   .inv-total-box .num{font-weight:800;font-size:15px;color:#5A4318;}
   .inv-sign{display:flex;justify-content:space-between;margin-top:22px;font-size:12px;}
   .inv-sign div{width:45%;border-top:1px solid #9A8355;padding-top:4px;text-align:center;color:#7A5A1E;}
+  .stamp-box{width:76px;height:76px;border:1.5px dashed #B99B5E;border-radius:50%;display:flex;
+    align-items:center;justify-content:center;text-align:center;font-size:9px;color:#B99B5E;margin-bottom:2px;}
   .inv-contact{text-align:center;font-size:10px;color:#9A8355;margin-top:14px;border-top:1px dashed #C9A24B;padding-top:8px;}
 </style>
 </head>
@@ -165,7 +167,8 @@
         <div class="field"><label>نام فروشگاه</label><input id="shopName" type="text" placeholder="طلافروشی ..."/></div>
         <div class="field"><label>شماره فاکتور</label><input id="invNumber" type="text"/></div>
         <div class="field"><label>تاریخ</label><input id="invDate" type="text"/></div>
-        <div class="field"><label>خریدار</label><input id="custName" type="text"/></div>
+        <div class="field"><label>ساعت</label><input id="invTime" type="text"/></div>
+        <div class="field full"><label>خریدار</label><input id="custName" type="text"/></div>
         <div class="field full"><label>آدرس / تلفن فروشگاه (اختیاری)</label><input id="shopContact" type="text" placeholder="تهران، خیابان ... - ۰۲۱-xxxxxxx"/></div>
       </div>
     </div>
@@ -209,7 +212,7 @@
     </div>
     <div class="inv-meta">
       <div><b>شماره فاکتور:</b> <span id="p-num"></span></div>
-      <div><b>تاریخ:</b> <span id="p-date"></span></div>
+      <div><b>تاریخ:</b> <span id="p-date"></span> &nbsp; <b>ساعت:</b> <span id="p-time"></span></div>
     </div>
     <div class="inv-meta">
       <div><b>هر گرم طلای ۱۸ عیار:</b> <span id="p-baseprice"></span> تومان</div>
@@ -232,7 +235,10 @@
 
     <div class="inv-sign">
       <div>امضا مشتری</div>
-      <div>مهر و امضا فروشگاه</div>
+      <div style="display:flex;flex-direction:column;align-items:center;gap:6px;border-top:none;">
+        <div class="stamp-box">محل مهر فروشگاه</div>
+        <div style="width:100%;border-top:1px solid #9A8355;padding-top:4px;">مهر و امضا فروشگاه</div>
+      </div>
     </div>
 
     <div class="inv-contact" id="p-contact"></div>
@@ -406,10 +412,23 @@ function computeRow(item){
   return { base, wage, profit, vat, total, karatLabel: karat.label };
 }
 
+function updateGrandTotal(){
+  const grand = invoiceItems.reduce((s,it)=> s + computeRow(it).total, 0);
+  $('grandTotalOut').textContent = toman(grand);
+  $('grandWordsOut').textContent = invoiceItems.length ? numberToPersianWords(grand) : '';
+}
+
+function updateRowMeta(item, rowEl){
+  const r = computeRow(item);
+  rowEl.querySelector('.item-meta').innerHTML =
+    `<span>سود: ${toman(r.profit)} · اجرت: ${toman(r.wage)}</span><span>جمع: ${toman(r.total)} تومان</span>`;
+  updateGrandTotal();
+}
+
 function renderItems(){
   const el = $('itemsList');
   el.innerHTML = '';
-  invoiceItems.forEach((item, idx)=>{
+  invoiceItems.forEach((item)=>{
     const r = computeRow(item);
     const row = document.createElement('div');
     row.className = 'item-row';
@@ -422,12 +441,18 @@ function renderItems(){
       <button class="del">✕</button>
       <div class="item-meta"><span>سود: ${toman(r.profit)} · اجرت: ${toman(r.wage)}</span><span>جمع: ${toman(r.total)} تومان</span></div>
     `;
-    row.querySelectorAll('[data-field]').forEach(inp=>{
+    // text & number inputs: update data + refresh only this row's totals, no full rebuild (keeps focus/cursor intact)
+    row.querySelectorAll('input[data-field]').forEach(inp=>{
       inp.addEventListener('input', (e)=>{
         const f = e.target.dataset.field;
         item[f] = (f==='weight') ? parseFloat(e.target.value)||0 : e.target.value;
-        renderItems();
+        updateRowMeta(item, row);
       });
+    });
+    // select: discrete change, safe to do a full rebuild
+    row.querySelector('select[data-field]').addEventListener('change', (e)=>{
+      item.karatStamp = e.target.value;
+      renderItems();
     });
     row.querySelector('.del').onclick = ()=>{
       invoiceItems = invoiceItems.filter(x=>x.id!==item.id);
@@ -436,22 +461,23 @@ function renderItems(){
     el.appendChild(row);
   });
 
-  const grand = invoiceItems.reduce((s,it)=> s + computeRow(it).total, 0);
-  $('grandTotalOut').textContent = toman(grand);
-  $('grandWordsOut').textContent = invoiceItems.length ? numberToPersianWords(grand) : '';
+  updateGrandTotal();
 }
 
 /* default invoice number + date */
 function initInvoiceMeta(){
   let seq = parseInt(localStorage.getItem('gold_inv_seq')||'1000');
   $('invNumber').value = faDigits(seq);
-  $('invDate').value = new Date().toLocaleDateString('fa-IR');
+  const now = new Date();
+  $('invDate').value = now.toLocaleDateString('fa-IR');
+  $('invTime').value = now.toLocaleTimeString('fa-IR', {hour:'2-digit', minute:'2-digit'});
 }
 
 $('printInvoiceBtn').onclick = ()=>{
   $('p-shop').textContent = $('shopName').value || 'طلافروشی';
   $('p-num').textContent = $('invNumber').value || '-';
   $('p-date').textContent = $('invDate').value || new Date().toLocaleDateString('fa-IR');
+  $('p-time').textContent = $('invTime').value || new Date().toLocaleTimeString('fa-IR', {hour:'2-digit', minute:'2-digit'});
   $('p-baseprice').textContent = toman(parseFloat($('basePrice').value)||0);
   $('p-cust').textContent = $('custName').value || '-';
   $('p-contact').textContent = $('shopContact').value || '';
