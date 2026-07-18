@@ -1,0 +1,6 @@
+{
+  "name": "مدیریت طلافروشی",
+  "description": "محاسبه‌گر طلا، صدور فاکتور فروش و خرید، مدیریت موجودی، مشتریان و گزارش‌گیری پیشرفته طلا فروشی",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
