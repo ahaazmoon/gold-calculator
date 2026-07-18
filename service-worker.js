@@ -1,4 +1,4 @@
-const CACHE_NAME = "gold-calc-v4";
+const CACHE_NAME = "gold-calc-v5";
 const ASSETS = [
   "./",
   "./index.html",

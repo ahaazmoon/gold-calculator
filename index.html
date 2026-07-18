@@ -4,7 +4,7 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
 <meta name="theme-color" content="#1B1712" />
-<title>ماشین‌حساب و فاکتور طلا</title>
+<title>مدیریت طلافروشی</title>
 <link rel="manifest" href="manifest.json" />
 <link rel="icon" href="icons/icon-192.png" />
 <link rel="apple-touch-icon" href="icons/icon-192.png" />
@@ -15,88 +15,79 @@
     --border:#3A2E1D; --borderStrong:#4A3B22;
     --gold:#C9A24B; --goldBright:#E8C874; --goldPale:#F2E4B8;
     --ivory:#F2E9D8; --muted:#A89A7E; --mutedDark:#8A7748; --mutedFaint:#6E6248;
-    --divider:#332918; --danger:#C97B6B;
+    --divider:#332918; --danger:#C97B6B; --ok:#8FBF7F;
   }
   *{box-sizing:border-box;}
-  body{
-    margin:0; background:var(--bg); color:var(--ivory);
-    font-family:'IBM Plex Sans Arabic','Vazirmatn',sans-serif;
-    padding-bottom:env(safe-area-inset-bottom);
-  }
-  .wrap{max-width:680px;margin:0 auto;padding:24px 16px 80px;}
-  h1{font-family:'Vazirmatn',sans-serif;font-size:22px;font-weight:800;color:var(--goldPale);margin:0 0 4px;}
-  .sub{font-size:13px;color:var(--muted);margin:0 0 24px;}
-  .card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:18px;margin-bottom:20px;}
-  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
-  .grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;}
-  .field label{display:block;font-size:12px;color:var(--mutedDark);margin-bottom:6px;}
-  .field input,.field select{
-    width:100%;background:var(--bg);border:1px solid var(--border);border-radius:10px;
-    padding:9px 10px;color:var(--ivory);font-size:14px;outline:none;font-family:inherit;
-  }
+  body{margin:0;background:var(--bg);color:var(--ivory);font-family:'IBM Plex Sans Arabic','Vazirmatn',sans-serif;padding-bottom:env(safe-area-inset-bottom);}
+  .wrap{max-width:720px;margin:0 auto;padding:20px 14px 80px;}
+  h1{font-family:'Vazirmatn',sans-serif;font-size:20px;font-weight:800;color:var(--goldPale);margin:0 0 4px;}
+  .sub{font-size:12px;color:var(--muted);margin:0 0 18px;}
+  .card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:16px;margin-bottom:16px;}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+  .field label{display:block;font-size:11px;color:var(--mutedDark);margin-bottom:5px;}
+  .field input,.field select,.field textarea{width:100%;background:var(--bg);border:1px solid var(--border);border-radius:9px;padding:8px 9px;color:var(--ivory);font-size:13px;outline:none;font-family:inherit;}
   .field input:focus,.field select:focus{border-color:var(--gold);}
   .full{grid-column:1/-1;}
-  .stamps{display:flex;gap:10px;overflow-x:auto;padding-bottom:6px;margin-bottom:20px;}
-  .stamp{
-    width:60px;height:60px;border-radius:50%;flex-shrink:0;border:2px solid #5A4D34;
-    background:var(--surface);display:flex;flex-direction:column;align-items:center;justify-content:center;
-    cursor:pointer;transition:.2s;
-  }
-  .stamp.active{border-color:var(--goldBright);background:#3A2E18;transform:scale(1.05);
-    box-shadow:0 0 0 3px rgba(232,200,116,0.15);}
-  .stamp b{font-size:14px;color:#B9A876;}
-  .stamp.active b{color:var(--goldPale);}
-  .stamp span{font-size:8px;color:var(--mutedDark);margin-top:2px;}
-  .stamp.active span{color:var(--goldBright);}
+  .stamps{display:flex;gap:8px;overflow-x:auto;padding-bottom:6px;margin-bottom:16px;}
+  .stamp{width:54px;height:54px;border-radius:50%;flex-shrink:0;border:2px solid #5A4D34;background:var(--surface);display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;transition:.2s;}
+  .stamp.active{border-color:var(--goldBright);background:#3A2E18;transform:scale(1.05);box-shadow:0 0 0 3px rgba(232,200,116,0.15);}
+  .stamp b{font-size:13px;color:#B9A876;} .stamp.active b{color:var(--goldPale);}
+  .stamp span{font-size:7px;color:var(--mutedDark);margin-top:1px;} .stamp.active span{color:var(--goldBright);}
   .result{background:linear-gradient(180deg,var(--surfaceAlt) 0%,#241C12 100%);border:1px solid var(--borderStrong);}
-  .result .label{font-size:12px;color:#B9A876;margin-bottom:4px;}
-  .result .total{font-family:'Vazirmatn',sans-serif;font-size:32px;font-weight:800;color:var(--goldPale);margin-bottom:16px;}
-  .result .total small{font-size:14px;font-weight:500;color:#B9A876;}
-  .row{display:flex;justify-content:space-between;font-size:14px;padding:7px 0;border-bottom:1px solid rgba(58,46,29,.6);}
+  .result .label{font-size:11px;color:#B9A876;margin-bottom:4px;}
+  .result .total{font-family:'Vazirmatn',sans-serif;font-size:28px;font-weight:800;color:var(--goldPale);margin-bottom:14px;}
+  .result .total small{font-size:13px;font-weight:500;color:#B9A876;}
+  .row{display:flex;justify-content:space-between;font-size:13px;padding:6px 0;border-bottom:1px solid rgba(58,46,29,.6);}
   .row:last-child{border-bottom:none;}
-  .row .val{font-variant-numeric:tabular-nums;}
-  .btn{width:100%;padding:11px 0;border-radius:12px;border:none;font-weight:700;font-size:14px;cursor:pointer;font-family:inherit;}
-  .btn-primary{background:var(--gold);color:var(--bg);margin-top:16px;}
-  .btn-secondary{background:transparent;border:1px solid var(--border);color:var(--ivory);margin-top:10px;}
-  .btn-small{width:auto;padding:6px 12px;font-size:12px;border-radius:8px;margin:0;}
-  .cmp-row{display:flex;justify-content:space-between;font-size:14px;padding:6px 0;border-bottom:1px solid var(--divider);}
+  .btn{width:100%;padding:10px 0;border-radius:11px;border:none;font-weight:700;font-size:13px;cursor:pointer;font-family:inherit;}
+  .btn-primary{background:var(--gold);color:var(--bg);margin-top:14px;}
+  .btn-secondary{background:transparent;border:1px solid var(--border);color:var(--ivory);margin-top:8px;}
+  .btn-small{width:auto;padding:6px 12px;font-size:11px;border-radius:8px;margin:0;}
+  .btn-danger{color:var(--danger);}
+  .cmp-row{display:flex;justify-content:space-between;font-size:13px;padding:5px 0;border-bottom:1px solid var(--divider);}
   .cmp-row:last-child{border-bottom:none;}
-  .cmp-row .p{color:#C9BC9C;}
-  .cmp-row .p small{color:var(--mutedFaint);font-size:11px;}
-  .section-title{font-size:14px;font-weight:700;color:var(--goldBright);margin-bottom:12px;display:flex;align-items:center;justify-content:space-between;gap:8px;}
-  .hist-item{display:flex;align-items:center;justify-content:space-between;font-size:12px;padding:8px;border-radius:8px;}
-  .hist-item button{background:none;border:none;color:var(--mutedDark);cursor:pointer;font-size:14px;}
-  .empty{font-size:12px;color:var(--mutedFaint);text-align:center;padding:16px 0;}
-  .footnote{font-size:11px;color:#5A4D34;text-align:center;margin-top:24px;}
-  .tabs{display:flex;gap:8px;margin-bottom:20px;}
-  .tab{flex:1;padding:10px;text-align:center;border-radius:10px;border:1px solid var(--border);background:var(--surface);
-    color:var(--muted);font-size:13px;cursor:pointer;font-weight:600;}
+  .cmp-row .p{color:#C9BC9C;} .cmp-row .p small{color:var(--mutedFaint);font-size:10px;}
+  .section-title{font-size:13px;font-weight:700;color:var(--goldBright);margin-bottom:10px;display:flex;align-items:center;justify-content:space-between;gap:8px;}
+  .empty{font-size:11px;color:var(--mutedFaint);text-align:center;padding:14px 0;}
+  .footnote{font-size:10px;color:#5A4D34;text-align:center;margin-top:20px;}
+  .tabs{display:flex;gap:6px;margin-bottom:18px;overflow-x:auto;padding-bottom:4px;}
+  .tab{flex:0 0 auto;padding:8px 12px;text-align:center;border-radius:9px;border:1px solid var(--border);background:var(--surface);color:var(--muted);font-size:12px;cursor:pointer;font-weight:600;white-space:nowrap;}
   .tab.active{border-color:var(--goldBright);color:var(--goldPale);background:#3A2E18;}
+  .item-row{display:grid;grid-template-columns:1.6fr 1fr 1fr auto;gap:6px;align-items:center;margin-bottom:8px;background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:8px;}
+  .item-row select.inv-pick{grid-column:1/-1;}
+  .item-row input,.item-row select{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:6px 7px;color:var(--ivory);font-size:12px;font-family:inherit;}
+  .item-row .del{background:none;border:none;color:var(--danger);font-size:15px;cursor:pointer;padding:4px;}
+  .item-meta{font-size:10.5px;color:var(--mutedFaint);grid-column:1/-1;display:flex;justify-content:space-between;}
+  .add-item-btn{width:100%;padding:8px;border-radius:9px;border:1px dashed var(--gold);background:none;color:var(--goldBright);font-size:12px;cursor:pointer;font-family:inherit;margin-top:2px;}
+  .grand-total{font-family:'Vazirmatn',sans-serif;font-size:24px;font-weight:800;color:var(--goldPale);text-align:center;margin:12px 0 4px;}
+  .grand-words{font-size:11px;color:var(--muted);text-align:center;margin-bottom:8px;}
+  .search-input{width:100%;background:var(--bg);border:1px solid var(--border);border-radius:9px;padding:8px 10px;color:var(--ivory);font-size:12px;margin-bottom:10px;font-family:inherit;}
+  .list-row{display:flex;align-items:center;justify-content:space-between;gap:8px;font-size:12px;padding:9px 8px;border-bottom:1px solid var(--divider);}
+  .list-row:last-child{border-bottom:none;}
+  .list-row .main{flex:1;min-width:0;}
+  .list-row .main .t1{color:var(--ivory);font-weight:600;}
+  .list-row .main .t2{color:var(--mutedDark);font-size:10.5px;margin-top:2px;}
+  .list-row .actions{display:flex;gap:6px;flex-shrink:0;}
+  .list-row .actions button{background:none;border:1px solid var(--border);color:var(--muted);border-radius:7px;padding:4px 8px;font-size:11px;cursor:pointer;}
+  .badge{display:inline-block;font-size:10px;padding:2px 7px;border-radius:20px;background:var(--surfaceAlt);color:var(--goldBright);border:1px solid var(--borderStrong);}
+  .badge.buy{color:#E8A874;}
+  .report-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+  .report-card{background:var(--bg);border:1px solid var(--border);border-radius:12px;padding:12px;text-align:center;}
+  .report-card .v{font-family:'Vazirmatn',sans-serif;font-size:18px;font-weight:800;color:var(--goldPale);}
+  .report-card .l{font-size:10.5px;color:var(--mutedDark);margin-top:3px;}
+  .note{font-size:11px;color:var(--mutedDark);background:var(--bg);border:1px solid var(--border);border-radius:9px;padding:8px 10px;margin-top:8px;line-height:1.7;}
+  .status-msg{font-size:11px;margin-top:8px;text-align:center;}
+  .status-msg.ok{color:var(--ok);} .status-msg.err{color:var(--danger);}
 
-  /* item rows editor */
-  .item-row{display:grid;grid-template-columns:2fr 1fr 1fr auto;gap:8px;align-items:center;margin-bottom:8px;
-    background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:8px;}
-  .item-row input,.item-row select{background:var(--surface);border:1px solid var(--border);border-radius:8px;
-    padding:7px 8px;color:var(--ivory);font-size:13px;font-family:inherit;}
-  .item-row .del{background:none;border:none;color:var(--danger);font-size:16px;cursor:pointer;padding:4px;}
-  .item-meta{font-size:11px;color:var(--mutedFaint);grid-column:1/-1;display:flex;justify-content:space-between;}
-  .add-item-btn{width:100%;padding:9px;border-radius:10px;border:1px dashed var(--gold);background:none;color:var(--goldBright);
-    font-size:13px;cursor:pointer;font-family:inherit;margin-top:4px;}
-  .grand-total{font-family:'Vazirmatn',sans-serif;font-size:26px;font-weight:800;color:var(--goldPale);text-align:center;margin:14px 0 4px;}
-  .grand-words{font-size:12px;color:var(--muted);text-align:center;margin-bottom:10px;}
-
-  /* Invoice print sheet - styled like traditional jewelry invoice */
-  #invoiceSheet{display:none;}
+  /* print sheets */
+  #printArea{display:none;}
   @media print{
     body *{visibility:hidden;}
-    #invoiceSheet, #invoiceSheet *{visibility:visible;}
-    #invoiceSheet{display:block !important;position:absolute;top:0;right:0;left:0;margin:0;}
+    #printArea, #printArea *{visibility:visible;}
+    #printArea{display:block !important;position:absolute;top:0;right:0;left:0;margin:0;}
     .no-print{display:none !important;}
   }
-  .inv-paper{
-    background:#FBF3DC; color:#3A2E10; padding:20px; border:3px solid #C9A24B; border-radius:4px;
-    font-family:'Vazirmatn','IBM Plex Sans Arabic',sans-serif;
-  }
+  .inv-paper{background:#FBF3DC;color:#3A2E10;padding:20px;border:3px solid #C9A24B;border-radius:4px;font-family:'Vazirmatn','IBM Plex Sans Arabic',sans-serif;}
   .inv-top{text-align:center;border-bottom:2px solid #C9A24B;padding-bottom:10px;margin-bottom:14px;}
   .inv-top h2{margin:0 0 2px;font-size:19px;color:#7A5A1E;}
   .inv-top .tagline{font-size:11px;color:#9A8355;}
@@ -106,41 +97,41 @@
   table.inv-table{width:100%;border-collapse:collapse;font-size:11.5px;margin-bottom:10px;}
   table.inv-table th{background:#EFE0AE;border:1px solid #C9A24B;padding:6px 4px;color:#5A4318;}
   table.inv-table td{border:1px solid #D9C58F;padding:6px 4px;text-align:center;}
-  .inv-footer{display:flex;justify-content:space-between;font-size:12px;margin-top:8px;}
   .inv-total-box{border:1px solid #C9A24B;border-radius:6px;padding:8px 10px;background:#FFFBEF;margin-bottom:10px;font-size:12px;}
   .inv-total-box .num{font-weight:800;font-size:15px;color:#5A4318;}
   .inv-sign{display:flex;justify-content:space-between;margin-top:22px;font-size:12px;}
   .inv-sign div{width:45%;border-top:1px solid #9A8355;padding-top:4px;text-align:center;color:#7A5A1E;}
-  .stamp-box{width:76px;height:76px;border:1.5px dashed #B99B5E;border-radius:50%;display:flex;
-    align-items:center;justify-content:center;text-align:center;font-size:9px;color:#B99B5E;margin-bottom:2px;}
+  .stamp-box{width:76px;height:76px;border:1.5px dashed #B99B5E;border-radius:50%;display:flex;align-items:center;justify-content:center;text-align:center;font-size:9px;color:#B99B5E;margin-bottom:2px;}
   .inv-contact{text-align:center;font-size:10px;color:#9A8355;margin-top:14px;border-top:1px dashed #C9A24B;padding-top:8px;}
 </style>
 </head>
 <body>
 <div class="wrap">
-  <h1>⚖️ ماشین‌حساب و فاکتور طلا</h1>
-  <p class="sub">محاسبه قیمت، ثبت تاریخچه و صدور فاکتور چاپی/PDF</p>
+  <h1>⚖️ مدیریت طلافروشی</h1>
+  <p class="sub">محاسبه، فروش، خرید طلای کهنه، موجودی، مشتریان و گزارش‌ها</p>
 
   <div class="tabs no-print">
     <div class="tab active" data-tab="calc">محاسبه</div>
-    <div class="tab" data-tab="invoice">فاکتور</div>
-    <div class="tab" data-tab="history">تاریخچه</div>
+    <div class="tab" data-tab="sell">فروش</div>
+    <div class="tab" data-tab="buy">خرید کهنه</div>
+    <div class="tab" data-tab="inventory">موجودی</div>
+    <div class="tab" data-tab="customers">مشتریان</div>
+    <div class="tab" data-tab="invoices">فاکتورها</div>
+    <div class="tab" data-tab="reports">گزارش</div>
+    <div class="tab" data-tab="settings">تنظیمات</div>
   </div>
 
   <!-- CALC TAB -->
   <div id="tab-calc">
     <div class="card">
-      <div class="section-title">
-        <span>محاسبه از روی مظنه جهانی (اختیاری)</span>
-      </div>
+      <div class="section-title"><span>محاسبه از روی مظنه جهانی (اختیاری)</span></div>
       <div class="grid2">
         <div class="field"><label>قیمت هر اونس جهانی (دلار)</label><input id="ouncePrice" type="number" step="0.01" placeholder="مثلاً 2650"/></div>
         <div class="field"><label>نرخ دلار (تومان)</label><input id="usdRate" type="number" step="100" placeholder="مثلاً 68000"/></div>
       </div>
-      <div style="font-size:12px;color:var(--mutedDark);margin-top:10px;">
+      <div style="font-size:11px;color:var(--mutedDark);margin-top:8px;">
         مظنه: <span id="mazaneOut" style="color:var(--goldBright);font-variant-numeric:tabular-nums;">۰</span> تومان
-        &nbsp;·&nbsp;
-        قیمت هر گرم ۱۸ عیار: <span id="gram18Out" style="color:var(--goldBright);font-variant-numeric:tabular-nums;">۰</span> تومان
+        &nbsp;·&nbsp; قیمت هر گرم ۱۸ عیار: <span id="gram18Out" style="color:var(--goldBright);font-variant-numeric:tabular-nums;">۰</span> تومان
       </div>
       <button class="btn btn-secondary" id="applyMazaneBtn">اعمال در ماشین‌حساب</button>
     </div>
@@ -155,92 +146,201 @@
       </div>
     </div>
 
-    <div class="sub" style="margin-bottom:8px;">عیار مبنای محاسبه (مهر عیار)</div>
+    <div class="sub" style="margin-bottom:6px;">عیار مبنای محاسبه (مهر عیار)</div>
     <div class="stamps" id="stamps"></div>
 
     <div class="card result">
       <div class="label">قیمت نهایی</div>
       <div class="total"><span id="totalOut">۰</span> <small>تومان</small></div>
-      <div class="row"><span>قیمت پایه طلا</span><span class="val" id="baseOut">۰</span></div>
-      <div class="row"><span id="wageLbl">اجرت ساخت</span><span class="val" id="wageOut">۰</span></div>
-      <div class="row"><span id="profitLbl">سود فروشنده</span><span class="val" id="profitOut">۰</span></div>
-      <div class="row"><span id="vatLbl">مالیات</span><span class="val" id="vatOut">۰</span></div>
+      <div class="row"><span>قیمت پایه طلا</span><span id="baseOut">۰</span></div>
+      <div class="row"><span id="wageLbl">اجرت ساخت</span><span id="wageOut">۰</span></div>
+      <div class="row"><span id="profitLbl">سود فروشنده</span><span id="profitOut">۰</span></div>
+      <div class="row"><span id="vatLbl">مالیات</span><span id="vatOut">۰</span></div>
       <button class="btn btn-primary" id="saveHistBtn">ثبت در تاریخچه</button>
-      <button class="btn btn-secondary" id="toInvoiceBtn">➡ افزودن به فاکتور</button>
+      <button class="btn btn-secondary" id="toInvoiceBtn">➡ افزودن به فاکتور فروش</button>
     </div>
 
     <div class="card">
       <div class="section-title">مقایسه قیمت عیارها (هر گرم)</div>
       <div id="cmpList"></div>
     </div>
+
+    <div class="card">
+      <div class="section-title"><span>📈 تاریخچه محاسبات</span>
+        <button class="btn-secondary btn-small" id="clearHistBtn">پاک کردن</button>
+      </div>
+      <div id="histList"></div>
+    </div>
   </div>
 
-  <!-- INVOICE TAB -->
-  <div id="tab-invoice" style="display:none;">
+  <!-- SELL TAB -->
+  <div id="tab-sell" style="display:none;">
     <div class="card">
-      <div class="section-title">اطلاعات فاکتور</div>
+      <div class="section-title">مشتری</div>
       <div class="grid2">
-        <div class="field"><label>نام فروشگاه</label><input id="shopName" type="text" placeholder="طلافروشی ..."/></div>
+        <div class="field"><label>انتخاب مشتری</label><select id="sellCustomerSelect"></select></div>
+        <div class="field"><label>یا مشتری جدید</label><input id="sellNewCustomerName" type="text" placeholder="نام مشتری جدید"/></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="grid2">
         <div class="field"><label>شماره فاکتور</label><input id="invNumber" type="text"/></div>
         <div class="field"><label>تاریخ</label><input id="invDate" type="text"/></div>
         <div class="field"><label>ساعت</label><input id="invTime" type="text"/></div>
-        <div class="field full"><label>خریدار</label><input id="custName" type="text"/></div>
-        <div class="field full"><label>آدرس / تلفن فروشگاه (اختیاری)</label><input id="shopContact" type="text" placeholder="تهران، خیابان ... - ۰۲۱-xxxxxxx"/></div>
       </div>
     </div>
 
     <div class="card">
       <div class="section-title">
         <span>اقلام فاکتور</span>
-        <span style="font-size:11px;color:var(--mutedFaint);font-weight:400;">هر گرم ۱۸ عیار: <span id="invBaseShow">۰</span> تومان</span>
+        <span style="font-size:10.5px;color:var(--mutedFaint);font-weight:400;">هر گرم ۱۸ عیار: <span id="invBaseShow">۰</span> تومان</span>
       </div>
       <div id="itemsList"></div>
-      <button class="add-item-btn" id="addItemBtn">+ افزودن قلم کالا</button>
+      <button class="add-item-btn" id="addItemBtn">+ افزودن قلم کالا (دستی)</button>
+      <button class="add-item-btn" id="addFromInvBtn">+ افزودن قلم از موجودی</button>
     </div>
 
     <div class="card result">
       <div class="grand-total"><span id="grandTotalOut">۰</span> تومان</div>
       <div class="grand-words" id="grandWordsOut"></div>
-      <button class="btn btn-primary" id="printInvoiceBtn">🖨 چاپ / ذخیره PDF فاکتور</button>
+      <button class="btn btn-primary" id="printInvoiceBtn">🖨 ثبت و چاپ / PDF فاکتور</button>
     </div>
   </div>
 
-  <!-- HISTORY TAB -->
-  <div id="tab-history" style="display:none;">
+  <!-- BUY TAB -->
+  <div id="tab-buy" style="display:none;">
+    <div class="card">
+      <div class="section-title">فروشنده (مشتری)</div>
+      <div class="grid2">
+        <div class="field"><label>انتخاب مشتری</label><select id="buyCustomerSelect"></select></div>
+        <div class="field"><label>یا مشتری جدید</label><input id="buyNewCustomerName" type="text" placeholder="نام مشتری جدید"/></div>
+      </div>
+    </div>
     <div class="card">
       <div class="section-title">
-        <span>📈 تاریخچه محاسبات</span>
-        <button class="btn-secondary btn-small" id="clearHistBtn">پاک کردن همه</button>
+        <span>اقلام خریداری‌شده</span>
+        <span style="font-size:10.5px;color:var(--mutedFaint);font-weight:400;">کسر پیش‌فرض: <input id="defaultDeduction" type="number" value="7" style="width:40px;background:var(--bg);border:1px solid var(--border);border-radius:5px;color:var(--ivory);text-align:center;font-size:10.5px;padding:2px;"/>٪</span>
       </div>
-      <div id="histList"></div>
+      <div id="buyItemsList"></div>
+      <button class="add-item-btn" id="addBuyItemBtn">+ افزودن قلم</button>
+    </div>
+    <div class="card result">
+      <div class="grand-total"><span id="buyGrandTotalOut">۰</span> تومان</div>
+      <div class="grand-words" id="buyGrandWordsOut"></div>
+      <label style="display:flex;align-items:center;gap:6px;font-size:11px;color:var(--muted);margin-top:6px;">
+        <input type="checkbox" id="addToInventoryCheck" checked/> اقلام خریداری‌شده به موجودی اضافه بشن
+      </label>
+      <button class="btn btn-primary" id="printBuyBtn">🖨 ثبت و چاپ رسید خرید</button>
+    </div>
+  </div>
+
+  <!-- INVENTORY TAB -->
+  <div id="tab-inventory" style="display:none;">
+    <div class="card">
+      <div class="section-title">افزودن کالا به موجودی</div>
+      <div class="grid2">
+        <div class="field"><label>نام/شرح کالا</label><input id="invItemName" type="text" placeholder="مثلاً دستبند زنجیری"/></div>
+        <div class="field"><label>کد (اختیاری)</label><input id="invItemCode" type="text"/></div>
+        <div class="field"><label>عیار</label><select id="invItemKarat"></select></div>
+        <div class="field"><label>وزن هر عدد (گرم)</label><input id="invItemWeight" type="number" step="0.01"/></div>
+        <div class="field full"><label>تعداد موجود</label><input id="invItemQty" type="number" step="1" value="1"/></div>
+      </div>
+      <button class="btn btn-primary" id="addInventoryBtn">افزودن به موجودی</button>
+    </div>
+    <div class="card">
+      <div class="section-title">لیست موجودی</div>
+      <input class="search-input" id="invSearch" placeholder="جست‌وجو در موجودی..."/>
+      <div id="inventoryList"></div>
+    </div>
+  </div>
+
+  <!-- CUSTOMERS TAB -->
+  <div id="tab-customers" style="display:none;">
+    <div class="card">
+      <div class="section-title">افزودن مشتری</div>
+      <div class="grid2">
+        <div class="field"><label>نام</label><input id="custItemName" type="text"/></div>
+        <div class="field"><label>شماره تماس</label><input id="custItemPhone" type="text"/></div>
+        <div class="field full"><label>یادداشت (اختیاری)</label><input id="custItemNotes" type="text"/></div>
+      </div>
+      <button class="btn btn-primary" id="addCustomerBtn">افزودن مشتری</button>
+    </div>
+    <div class="card">
+      <div class="section-title">لیست مشتریان</div>
+      <input class="search-input" id="custSearch" placeholder="جست‌وجوی نام یا شماره..."/>
+      <div id="customersList"></div>
+    </div>
+  </div>
+
+  <!-- INVOICES TAB -->
+  <div id="tab-invoices" style="display:none;">
+    <div class="card">
+      <div class="section-title">تاریخچه فاکتورها</div>
+      <input class="search-input" id="invoiceSearch" placeholder="جست‌وجوی نام مشتری یا شماره فاکتور..."/>
+      <div id="invoicesList"></div>
+    </div>
+  </div>
+
+  <!-- REPORTS TAB -->
+  <div id="tab-reports" style="display:none;">
+    <div class="card">
+      <div class="section-title">امروز</div>
+      <div class="report-grid" id="reportToday"></div>
+    </div>
+    <div class="card">
+      <div class="section-title">این ماه</div>
+      <div class="report-grid" id="reportMonth"></div>
+    </div>
+    <div class="card">
+      <div class="section-title">مجموع کل</div>
+      <div class="report-grid" id="reportAll"></div>
+    </div>
+  </div>
+
+  <!-- SETTINGS TAB -->
+  <div id="tab-settings" style="display:none;">
+    <div class="card">
+      <div class="section-title">اطلاعات فروشگاه</div>
+      <div class="grid2">
+        <div class="field full"><label>نام فروشگاه</label><input id="shopName" type="text" placeholder="طلافروشی ..."/></div>
+        <div class="field full"><label>آدرس / تلفن (روی فاکتور چاپ می‌شه)</label><input id="shopContact" type="text"/></div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="section-title">قیمت لحظه‌ای طلا (GoldAPI)</div>
+      <div class="field"><label>کلید API (از goldapi.io رایگان بگیر)</label><input id="apiKey" type="text" placeholder="goldapi_..."/></div>
+      <button class="btn btn-secondary" id="fetchPriceBtn">دریافت قیمت لحظه‌ای اونس</button>
+      <div id="priceStatus" class="status-msg"></div>
+      <div class="note">
+        این قابلیت به یه سرویس بیرونی (goldapi.io) وصل می‌شه که یه کلید رایگان لازم داره (ثبت‌نام در سایتشون). نرخ دلار به تومان (بازار آزاد) رو باید خودت دستی وارد کنی چون سرویس رایگان معتبری براش نداریم. اگه اتصال کار نکرد (بعضی مرورگرها CORS رو مسدود می‌کنن)، همون روش دستی وارد کردن قیمت اونس رو توی تب «محاسبه» استفاده کن.
+      </div>
+    </div>
+    <div class="card">
+      <div class="section-title">داده‌ها</div>
+      <div class="note">همه‌ی اطلاعات (موجودی، مشتریان، فاکتورها) روی همین گوشی ذخیره می‌شن، نه روی سرور. اگه cache مرورگر پاک بشه، این اطلاعات از بین می‌رن. برای خروجی گرفتن، بگو از کلود بخوام یه دکمه‌ی «خروجی اکسل» هم اضافه کنم.</div>
     </div>
   </div>
 
   <p class="footnote">مالیات بر ارزش‌افزوده فقط روی اجرت و سود اعمال می‌شود، نه روی ارزش پایه طلا</p>
 </div>
 
-<!-- printable invoice, hidden on screen -->
-<div id="invoiceSheet">
+<!-- printable area -->
+<div id="printArea">
   <div class="inv-paper">
     <div class="inv-top">
       <h2 id="p-shop">طلافروشی</h2>
-      <div class="tagline">فاکتور فروش طلا و جواهرات</div>
+      <div class="tagline" id="p-tagline">فاکتور فروش طلا و جواهرات</div>
     </div>
     <div class="inv-meta">
-      <div><b>شماره فاکتور:</b> <span id="p-num"></span></div>
+      <div><b id="p-numLbl">شماره فاکتور:</b> <span id="p-num"></span></div>
       <div><b>تاریخ:</b> <span id="p-date"></span> &nbsp; <b>ساعت:</b> <span id="p-time"></span></div>
     </div>
-    <div class="inv-meta">
-      <div><b>هر گرم طلای ۱۸ عیار:</b> <span id="p-baseprice"></span> تومان</div>
-    </div>
-    <div class="inv-buyer"><b>خریدار:</b> <span id="p-cust"></span></div>
+    <div class="inv-meta" id="p-basepriceRow"><div><b>هر گرم طلای ۱۸ عیار:</b> <span id="p-baseprice"></span> تومان</div></div>
+    <div class="inv-buyer"><b id="p-custLbl">خریدار:</b> <span id="p-cust"></span></div>
 
     <table class="inv-table">
-      <thead>
-        <tr>
-          <th>ردیف</th><th>شرح کالا</th><th>عیار</th><th>وزن طلا (گرم)</th><th>سود</th><th>اجرت</th><th>جمع کل با احتساب مالیات</th>
-        </tr>
-      </thead>
+      <thead><tr id="p-thead"></tr></thead>
       <tbody id="p-items"></tbody>
     </table>
 
@@ -250,13 +350,12 @@
     </div>
 
     <div class="inv-sign">
-      <div>امضا مشتری</div>
+      <div id="p-sign1">امضا مشتری</div>
       <div style="display:flex;flex-direction:column;align-items:center;gap:6px;border-top:none;">
         <div class="stamp-box">محل مهر فروشگاه</div>
-        <div style="width:100%;border-top:1px solid #9A8355;padding-top:4px;">مهر و امضا فروشگاه</div>
+        <div style="width:100%;border-top:1px solid #9A8355;padding-top:4px;" id="p-sign2">مهر و امضا فروشگاه</div>
       </div>
     </div>
-
     <div class="inv-contact" id="p-contact"></div>
   </div>
 </div>
@@ -265,6 +364,7 @@
 const faDigits = (n) => String(n).replace(/[0-9]/g, d => "۰۱۲۳۴۵۶۷۸۹"[d]);
 const toman = (n) => isFinite(n) ? faDigits(Math.round(n).toLocaleString('en-US')) : faDigits(0);
 const $ = id => document.getElementById(id);
+const uid = () => Date.now().toString(36)+Math.random().toString(36).slice(2,7);
 
 const KARATS = [
   {label:"۲۴ عیار", stamp:"999", purity:999},
@@ -276,300 +376,618 @@ const KARATS = [
 let selectedKarat = KARATS[3];
 
 /* ---------- Persian number to words ---------- */
-const P_ONES = ["","یک","دو","سه","چهار","پنج","شش","هفت","هشت","نه"];
-const P_TEENS = ["ده","یازده","دوازده","سیزده","چهارده","پانزده","شانزده","هفده","هجده","نوزده"];
-const P_TENS = ["","ده","بیست","سی","چهل","پنجاه","شصت","هفتاد","هشتاد","نود"];
-const P_HUNDREDS = ["","صد","دویست","سیصد","چهارصد","پانصد","ششصد","هفتصد","هشتصد","نهصد"];
-const P_SCALES = ["","هزار","میلیون","میلیارد","تریلیون"];
+const P_ONES=["","یک","دو","سه","چهار","پنج","شش","هفت","هشت","نه"];
+const P_TEENS=["ده","یازده","دوازده","سیزده","چهارده","پانزده","شانزده","هفده","هجده","نوزده"];
+const P_TENS=["","ده","بیست","سی","چهل","پنجاه","شصت","هفتاد","هشتاد","نود"];
+const P_HUNDREDS=["","صد","دویست","سیصد","چهارصد","پانصد","ششصد","هفتصد","هشتصد","نهصد"];
+const P_SCALES=["","هزار","میلیون","میلیارد","تریلیون"];
+function threeDigitWords(n){let h=Math.floor(n/100),r=n%100;let parts=[];if(h>0)parts.push(P_HUNDREDS[h]);
+  if(r>=10&&r<20)parts.push(P_TEENS[r-10]);else{let t=Math.floor(r/10),o=r%10;if(t>0)parts.push(P_TENS[t]);if(o>0)parts.push(P_ONES[o]);}
+  return parts.join(' و ');}
+function numberToPersianWords(num){num=Math.round(num);if(num===0)return 'صفر تومان';
+  let groups=[];let n=num;while(n>0){groups.push(n%1000);n=Math.floor(n/1000);}
+  let parts=[];for(let i=groups.length-1;i>=0;i--){if(groups[i]===0)continue;let w=threeDigitWords(groups[i]);
+  if(P_SCALES[i])w+=' '+P_SCALES[i];parts.push(w);}return parts.join(' و ')+' تومان';}
 
-function threeDigitWords(n){
-  let h = Math.floor(n/100), r = n%100;
-  let parts = [];
-  if(h>0) parts.push(P_HUNDREDS[h]);
-  if(r>=10 && r<20) parts.push(P_TEENS[r-10]);
-  else{
-    let t = Math.floor(r/10), o = r%10;
-    if(t>0) parts.push(P_TENS[t]);
-    if(o>0) parts.push(P_ONES[o]);
-  }
-  return parts.join(' و ');
-}
-function numberToPersianWords(num){
-  num = Math.round(num);
-  if(num===0) return 'صفر تومان';
-  let groups = [];
-  let n = num;
-  while(n>0){ groups.push(n%1000); n = Math.floor(n/1000); }
-  let parts = [];
-  for(let i=groups.length-1;i>=0;i--){
-    if(groups[i]===0) continue;
-    let w = threeDigitWords(groups[i]);
-    if(P_SCALES[i]) w += ' ' + P_SCALES[i];
-    parts.push(w);
-  }
-  return parts.join(' و ') + ' تومان';
-}
+/* ---------- storage helpers ---------- */
+const LS = {
+  get(key, def){ try{ const v = JSON.parse(localStorage.getItem(key)); return v===null||v===undefined ? def : v; }catch(e){ return def; } },
+  set(key, val){ localStorage.setItem(key, JSON.stringify(val)); }
+};
+let inventory = LS.get('gold_inventory_v1', []);
+let customers = LS.get('gold_customers_v1', []);
+let invoices = LS.get('gold_invoices_v1', []);
+let settings = LS.get('gold_settings_v1', {shopName:'', shopContact:'', apiKey:''});
 
-/* ---------- ounce/mazaneh -> gram 18k conversion ---------- */
+function saveInventory(){ LS.set('gold_inventory_v1', inventory); }
+function saveCustomers(){ LS.set('gold_customers_v1', customers); }
+function saveInvoices(){ LS.set('gold_invoices_v1', invoices); }
+function saveSettings(){ LS.set('gold_settings_v1', settings); }
+
+/* ---------- ounce/mazaneh ---------- */
 function updateMazane(){
   const ounce = parseFloat($('ouncePrice').value)||0;
   const usd = parseFloat($('usdRate').value)||0;
-  const mazane = (ounce * usd) / 9.57;
-  const gram18 = mazane / 4.3318;
+  const mazane = (ounce*usd)/9.57;
+  const gram18 = mazane/4.3318;
   $('mazaneOut').textContent = toman(mazane);
   $('gram18Out').textContent = toman(gram18);
   return gram18;
 }
-['ouncePrice','usdRate'].forEach(id=>{
-  $(id).addEventListener('input', updateMazane);
-});
-$('applyMazaneBtn').onclick = ()=>{
-  const gram18 = updateMazane();
-  if(gram18>0){
-    $('basePrice').value = Math.round(gram18);
-    calc();
-  }
-};
+['ouncePrice','usdRate'].forEach(id=>$(id).addEventListener('input', updateMazane));
+$('applyMazaneBtn').onclick = ()=>{ const g=updateMazane(); if(g>0){ $('basePrice').value=Math.round(g); calc(); } };
 
 /* ---------- calc tab ---------- */
 function renderStamps(){
-  const el = $('stamps');
-  el.innerHTML = '';
+  const el=$('stamps'); el.innerHTML='';
   KARATS.forEach(k=>{
-    const d = document.createElement('div');
-    d.className = 'stamp' + (k.stamp===selectedKarat.stamp ? ' active':'');
-    d.innerHTML = `<b>${faDigits(k.stamp)}</b><span>${k.label}</span>`;
-    d.onclick = ()=>{ selectedKarat = k; renderStamps(); calc(); };
+    const d=document.createElement('div');
+    d.className='stamp'+(k.stamp===selectedKarat.stamp?' active':'');
+    d.innerHTML=`<b>${faDigits(k.stamp)}</b><span>${k.label}</span>`;
+    d.onclick=()=>{ selectedKarat=k; renderStamps(); calc(); };
     el.appendChild(d);
   });
 }
-
 function calc(){
-  const weight = parseFloat($('weight').value)||0;
-  const basePrice18 = parseFloat($('basePrice').value)||0;
-  const wagePct = parseFloat($('wagePct').value)||0;
-  const profitPct = parseFloat($('profitPct').value)||0;
-  const vatPct = parseFloat($('vatPct').value)||0;
-
-  const pricePerGram = (basePrice18/750) * selectedKarat.purity;
-  const base = weight * pricePerGram;
-  const wage = base * (wagePct/100);
-  const profit = (base+wage) * (profitPct/100);
-  const vat = (wage+profit) * (vatPct/100);
-  const total = base+wage+profit+vat;
-
-  $('totalOut').textContent = toman(total);
-  $('baseOut').textContent = toman(base) + ' تومان';
-  $('wageOut').textContent = toman(wage) + ' تومان';
-  $('profitOut').textContent = toman(profit) + ' تومان';
-  $('vatOut').textContent = toman(vat) + ' تومان';
-  $('wageLbl').textContent = `اجرت ساخت (${faDigits(wagePct)}٪)`;
-  $('profitLbl').textContent = `سود فروشنده (${faDigits(profitPct)}٪)`;
-  $('vatLbl').textContent = `مالیات (${faDigits(vatPct)}٪ روی اجرت و سود)`;
-
-  const cmp = $('cmpList');
-  cmp.innerHTML = '';
+  const weight=parseFloat($('weight').value)||0;
+  const basePrice18=parseFloat($('basePrice').value)||0;
+  const wagePct=parseFloat($('wagePct').value)||0;
+  const profitPct=parseFloat($('profitPct').value)||0;
+  const vatPct=parseFloat($('vatPct').value)||0;
+  const pricePerGram=(basePrice18/750)*selectedKarat.purity;
+  const base=weight*pricePerGram;
+  const wage=base*(wagePct/100);
+  const profit=(base+wage)*(profitPct/100);
+  const vat=(wage+profit)*(vatPct/100);
+  const total=base+wage+profit+vat;
+  $('totalOut').textContent=toman(total);
+  $('baseOut').textContent=toman(base)+' تومان';
+  $('wageOut').textContent=toman(wage)+' تومان';
+  $('profitOut').textContent=toman(profit)+' تومان';
+  $('vatOut').textContent=toman(vat)+' تومان';
+  $('wageLbl').textContent=`اجرت ساخت (${faDigits(wagePct)}٪)`;
+  $('profitLbl').textContent=`سود فروشنده (${faDigits(profitPct)}٪)`;
+  $('vatLbl').textContent=`مالیات (${faDigits(vatPct)}٪ روی اجرت و سود)`;
+  const cmp=$('cmpList'); cmp.innerHTML='';
   KARATS.forEach(k=>{
-    const ppg = (basePrice18/750)*k.purity;
-    const row = document.createElement('div');
-    row.className = 'cmp-row';
-    row.innerHTML = `<span class="p">${k.label} <small>(${faDigits(k.stamp)})</small></span><span>${toman(ppg)} تومان</span>`;
+    const ppg=(basePrice18/750)*k.purity;
+    const row=document.createElement('div'); row.className='cmp-row';
+    row.innerHTML=`<span class="p">${k.label} <small>(${faDigits(k.stamp)})</small></span><span>${toman(ppg)} تومان</span>`;
     cmp.appendChild(row);
   });
-
-  $('invBaseShow').textContent = toman(basePrice18);
-  renderItems(); // keep invoice totals synced with global settings
-  return {weight, total, karatLabel: selectedKarat.label, pricePerGram};
+  $('invBaseShow').textContent=toman(basePrice18);
+  if(document.querySelector('.tab[data-tab="sell"]').classList.contains('active')) renderItems();
+  return {weight,total,karatLabel:selectedKarat.label,pricePerGram};
 }
+['weight','basePrice','wagePct','profitPct','vatPct'].forEach(id=>$(id).addEventListener('input', calc));
 
-['weight','basePrice','wagePct','profitPct','vatPct'].forEach(id=>{
-  $(id).addEventListener('input', calc);
-});
-
-/* ---------- history ---------- */
-const HKEY = 'gold_calc_history';
-function loadHist(){ try{ return JSON.parse(localStorage.getItem(HKEY))||[]; }catch(e){ return []; } }
-function saveHist(list){ localStorage.setItem(HKEY, JSON.stringify(list)); renderHist(); }
-
+/* ---------- calc history ---------- */
+const HKEY='gold_calc_history';
+function loadHist(){ return LS.get(HKEY, []); }
+function saveHist(list){ LS.set(HKEY, list); renderHist(); }
 function renderHist(){
-  const list = loadHist();
-  const el = $('histList');
-  if(list.length===0){ el.innerHTML = '<div class="empty">هنوز محاسبه‌ای ثبت نشده.</div>'; return; }
-  el.innerHTML = '';
-  [...list].reverse().forEach(h=>{
-    const row = document.createElement('div');
-    row.className = 'hist-item';
-    row.innerHTML = `<span style="color:var(--mutedDark)">${h.date}</span>
-      <span style="color:#C9BC9C">${faDigits(h.weight)} گرم · ${h.karatLabel}</span>
-      <span style="color:var(--goldPale)">${toman(h.total)} ت</span>
-      <button data-id="${h.id}">✕</button>`;
-    row.querySelector('button').onclick = ()=>{ saveHist(loadHist().filter(x=>x.id!==h.id)); };
+  const list=loadHist(); const el=$('histList');
+  if(list.length===0){ el.innerHTML='<div class="empty">هنوز محاسبه‌ای ثبت نشده.</div>'; return; }
+  el.innerHTML='';
+  [...list].reverse().slice(0,20).forEach(h=>{
+    const row=document.createElement('div'); row.className='list-row';
+    row.innerHTML=`<div class="main"><div class="t1">${toman(h.total)} ت</div><div class="t2">${h.date} · ${faDigits(h.weight)} گرم · ${h.karatLabel}</div></div>
+      <div class="actions"><button data-id="${h.id}">حذف</button></div>`;
+    row.querySelector('button').onclick=()=>saveHist(loadHist().filter(x=>x.id!==h.id));
     el.appendChild(row);
   });
 }
-
-$('saveHistBtn').onclick = ()=>{
-  const c = calc();
-  const list = loadHist();
-  list.push({id:Date.now(), date:new Date().toLocaleDateString('fa-IR'), weight:c.weight, karatLabel:c.karatLabel, total:c.total});
+$('saveHistBtn').onclick=()=>{
+  const c=calc(); const list=loadHist();
+  list.push({id:uid(), date:new Date().toLocaleDateString('fa-IR'), weight:c.weight, karatLabel:c.karatLabel, total:c.total});
   saveHist(list.slice(-50));
 };
-$('clearHistBtn').onclick = ()=>{ if(confirm('تاریخچه پاک بشه؟')) saveHist([]); };
+$('clearHistBtn').onclick=()=>{ if(confirm('تاریخچه پاک بشه؟')) saveHist([]); };
 
-/* ---------- invoice items ---------- */
-let invoiceItems = []; // {id, desc, karatStamp, weight}
-
-function newItemFromCalc(){
-  const weight = parseFloat($('weight').value)||0;
-  return { id: Date.now()+Math.random(), desc:'', karatStamp: selectedKarat.stamp, weight };
-}
-
-$('toInvoiceBtn').onclick = ()=>{
-  invoiceItems.push(newItemFromCalc());
-  renderItems();
-  document.querySelector('.tab[data-tab="invoice"]').click();
-};
-$('addItemBtn').onclick = ()=>{
-  invoiceItems.push({ id: Date.now()+Math.random(), desc:'', karatStamp:'750', weight:1 });
-  renderItems();
-};
-
+/* ---------- sell invoice items ---------- */
+let invoiceItems=[];
 function computeRow(item){
-  const basePrice18 = parseFloat($('basePrice').value)||0;
-  const wagePct = parseFloat($('wagePct').value)||0;
-  const profitPct = parseFloat($('profitPct').value)||0;
-  const vatPct = parseFloat($('vatPct').value)||0;
-  const karat = KARATS.find(k=>k.stamp===item.karatStamp) || KARATS[3];
-  const pricePerGram = (basePrice18/750) * karat.purity;
-  const base = (item.weight||0) * pricePerGram;
-  const wage = base * (wagePct/100);
-  const profit = (base+wage) * (profitPct/100);
-  const vat = (wage+profit) * (vatPct/100);
-  const total = base+wage+profit+vat;
-  return { base, wage, profit, vat, total, karatLabel: karat.label };
+  const basePrice18=parseFloat($('basePrice').value)||0;
+  const wagePct=parseFloat($('wagePct').value)||0;
+  const profitPct=parseFloat($('profitPct').value)||0;
+  const vatPct=parseFloat($('vatPct').value)||0;
+  const karat=KARATS.find(k=>k.stamp===item.karatStamp)||KARATS[3];
+  const pricePerGram=(basePrice18/750)*karat.purity;
+  const base=(item.weight||0)*pricePerGram;
+  const wage=base*(wagePct/100);
+  const profit=(base+wage)*(profitPct/100);
+  const vat=(wage+profit)*(vatPct/100);
+  const total=base+wage+profit+vat;
+  return {base,wage,profit,vat,total,karatLabel:karat.label};
 }
-
+function newItemFromCalc(){
+  const weight=parseFloat($('weight').value)||0;
+  return {id:uid(), desc:'', karatStamp:selectedKarat.stamp, weight, invItemId:null};
+}
+$('toInvoiceBtn').onclick=()=>{ invoiceItems.push(newItemFromCalc()); renderItems(); document.querySelector('.tab[data-tab="sell"]').click(); };
+$('addItemBtn').onclick=()=>{ invoiceItems.push({id:uid(), desc:'', karatStamp:'750', weight:1, invItemId:null}); renderItems(); };
+$('addFromInvBtn').onclick=()=>{
+  if(inventory.length===0){ alert('موجودی خالیه.'); return; }
+  const it=inventory[0];
+  invoiceItems.push({id:uid(), desc:it.name, karatStamp:it.karatStamp, weight:it.weight, invItemId:it.id});
+  renderItems();
+};
 function updateGrandTotal(){
-  const grand = invoiceItems.reduce((s,it)=> s + computeRow(it).total, 0);
-  $('grandTotalOut').textContent = toman(grand);
-  $('grandWordsOut').textContent = invoiceItems.length ? numberToPersianWords(grand) : '';
+  const grand=invoiceItems.reduce((s,it)=>s+computeRow(it).total,0);
+  $('grandTotalOut').textContent=toman(grand);
+  $('grandWordsOut').textContent=invoiceItems.length?numberToPersianWords(grand):'';
 }
-
-function updateRowMeta(item, rowEl){
-  const r = computeRow(item);
-  rowEl.querySelector('.item-meta').innerHTML =
-    `<span>سود: ${toman(r.profit)} · اجرت: ${toman(r.wage)}</span><span>جمع: ${toman(r.total)} تومان</span>`;
+function updateRowMeta(item,rowEl){
+  const r=computeRow(item);
+  rowEl.querySelector('.item-meta').innerHTML=`<span>سود: ${toman(r.profit)} · اجرت: ${toman(r.wage)}</span><span>جمع: ${toman(r.total)} تومان</span>`;
   updateGrandTotal();
 }
-
 function renderItems(){
-  const el = $('itemsList');
-  el.innerHTML = '';
+  const el=$('itemsList'); el.innerHTML='';
   invoiceItems.forEach((item)=>{
-    const r = computeRow(item);
-    const row = document.createElement('div');
-    row.className = 'item-row';
-    row.innerHTML = `
-      <input type="text" placeholder="شرح کالا (مثلاً دستبند)" value="${item.desc}" data-field="desc"/>
-      <select data-field="karatStamp">
-        ${KARATS.map(k=>`<option value="${k.stamp}" ${k.stamp===item.karatStamp?'selected':''}>${k.label}</option>`).join('')}
-      </select>
+    const r=computeRow(item);
+    const row=document.createElement('div'); row.className='item-row';
+    const invOptions = inventory.map(inv=>`<option value="${inv.id}" ${inv.id===item.invItemId?'selected':''}>${inv.name} (${faDigits(inv.qty)} عدد)</option>`).join('');
+    row.innerHTML=`
+      ${inventory.length? `<select class="inv-pick" data-field="invpick"><option value="">— انتخاب از موجودی (اختیاری) —</option>${invOptions}</select>`:''}
+      <input type="text" placeholder="شرح کالا" value="${item.desc}" data-field="desc"/>
+      <select data-field="karatStamp">${KARATS.map(k=>`<option value="${k.stamp}" ${k.stamp===item.karatStamp?'selected':''}>${k.label}</option>`).join('')}</select>
       <input type="number" step="0.01" placeholder="وزن (گرم)" value="${item.weight}" data-field="weight"/>
       <button class="del">✕</button>
       <div class="item-meta"><span>سود: ${toman(r.profit)} · اجرت: ${toman(r.wage)}</span><span>جمع: ${toman(r.total)} تومان</span></div>
     `;
-    // text & number inputs: update data + refresh only this row's totals, no full rebuild (keeps focus/cursor intact)
     row.querySelectorAll('input[data-field]').forEach(inp=>{
-      inp.addEventListener('input', (e)=>{
-        const f = e.target.dataset.field;
-        item[f] = (f==='weight') ? parseFloat(e.target.value)||0 : e.target.value;
-        updateRowMeta(item, row);
+      inp.addEventListener('input',(e)=>{
+        const f=e.target.dataset.field;
+        item[f]=(f==='weight')?parseFloat(e.target.value)||0:e.target.value;
+        updateRowMeta(item,row);
       });
     });
-    // select: discrete change, safe to do a full rebuild
-    row.querySelector('select[data-field]').addEventListener('change', (e)=>{
-      item.karatStamp = e.target.value;
-      renderItems();
-    });
-    row.querySelector('.del').onclick = ()=>{
-      invoiceItems = invoiceItems.filter(x=>x.id!==item.id);
-      renderItems();
-    };
+    const karatSel=row.querySelector('select[data-field="karatStamp"]');
+    karatSel.addEventListener('change',(e)=>{ item.karatStamp=e.target.value; renderItems(); });
+    const invPick=row.querySelector('select[data-field="invpick"]');
+    if(invPick){
+      invPick.addEventListener('change',(e)=>{
+        const inv=inventory.find(x=>x.id===e.target.value);
+        if(inv){ item.desc=inv.name; item.karatStamp=inv.karatStamp; item.weight=inv.weight; item.invItemId=inv.id; }
+        else{ item.invItemId=null; }
+        renderItems();
+      });
+    }
+    row.querySelector('.del').onclick=()=>{ invoiceItems=invoiceItems.filter(x=>x.id!==item.id); renderItems(); };
     el.appendChild(row);
   });
-
   updateGrandTotal();
 }
 
-/* default invoice number + date */
-function initInvoiceMeta(){
-  let seq = parseInt(localStorage.getItem('gold_inv_seq')||'1000');
-  $('invNumber').value = faDigits(seq);
-  const now = new Date();
-  $('invDate').value = now.toLocaleDateString('fa-IR');
-  $('invTime').value = now.toLocaleTimeString('fa-IR', {hour:'2-digit', minute:'2-digit'});
+/* ---------- customers ---------- */
+function refreshCustomerSelects(){
+  ['sellCustomerSelect','buyCustomerSelect'].forEach(id=>{
+    const sel=$(id); const cur=sel.value;
+    sel.innerHTML='<option value="">— بدون مشتری ثبت‌شده —</option>'+
+      customers.map(c=>`<option value="${c.id}">${c.name}${c.phone? ' · '+c.phone:''}</option>`).join('');
+    if(cur) sel.value=cur;
+  });
+}
+function customerStats(customerId){
+  const list=invoices.filter(iv=>iv.customerId===customerId);
+  const totalSell=list.filter(iv=>iv.type==='sell').reduce((s,iv)=>s+iv.grandTotal,0);
+  return {count:list.length, totalSell};
+}
+function renderCustomers(){
+  const q=($('custSearch').value||'').trim();
+  const el=$('customersList');
+  const list=customers.filter(c=> !q || c.name.includes(q) || (c.phone||'').includes(q));
+  if(list.length===0){ el.innerHTML='<div class="empty">مشتری‌ای ثبت نشده.</div>'; return; }
+  el.innerHTML='';
+  list.forEach(c=>{
+    const st=customerStats(c.id);
+    const row=document.createElement('div'); row.className='list-row';
+    row.innerHTML=`<div class="main"><div class="t1">${c.name}</div>
+      <div class="t2">${c.phone||'-'} · ${faDigits(st.count)} فاکتور · جمع خرید: ${toman(st.totalSell)} ت</div></div>
+      <div class="actions"><button class="btn-danger" data-id="${c.id}">حذف</button></div>`;
+    row.querySelector('button').onclick=()=>{
+      if(confirm('این مشتری حذف بشه؟')){ customers=customers.filter(x=>x.id!==c.id); saveCustomers(); renderCustomers(); refreshCustomerSelects(); }
+    };
+    el.appendChild(row);
+  });
+}
+$('addCustomerBtn').onclick=()=>{
+  const name=$('custItemName').value.trim();
+  if(!name){ alert('نام مشتری رو وارد کن.'); return; }
+  customers.push({id:uid(), name, phone:$('custItemPhone').value.trim(), notes:$('custItemNotes').value.trim(), createdAt:Date.now()});
+  saveCustomers();
+  $('custItemName').value=''; $('custItemPhone').value=''; $('custItemNotes').value='';
+  renderCustomers(); refreshCustomerSelects();
+};
+$('custSearch').addEventListener('input', renderCustomers);
+
+function resolveCustomer(selectId, newNameId){
+  const selId=$(selectId).value;
+  const newName=$(newNameId).value.trim();
+  if(newName){
+    const c={id:uid(), name:newName, phone:'', notes:'', createdAt:Date.now()};
+    customers.push(c); saveCustomers(); refreshCustomerSelects();
+    $(newNameId).value='';
+    return c;
+  }
+  if(selId){ return customers.find(c=>c.id===selId) || null; }
+  return null;
 }
 
-$('printInvoiceBtn').onclick = ()=>{
-  $('p-shop').textContent = $('shopName').value || 'طلافروشی';
-  $('p-num').textContent = $('invNumber').value || '-';
-  $('p-date').textContent = $('invDate').value || new Date().toLocaleDateString('fa-IR');
-  $('p-time').textContent = $('invTime').value || new Date().toLocaleTimeString('fa-IR', {hour:'2-digit', minute:'2-digit'});
-  $('p-baseprice').textContent = toman(parseFloat($('basePrice').value)||0);
-  $('p-cust').textContent = $('custName').value || '-';
-  $('p-contact').textContent = $('shopContact').value || '';
+/* ---------- inventory ---------- */
+function fillInvKaratSelect(){
+  $('invItemKarat').innerHTML = KARATS.map(k=>`<option value="${k.stamp}">${k.label}</option>`).join('');
+}
+function renderInventory(){
+  const q=($('invSearch').value||'').trim();
+  const el=$('inventoryList');
+  const list=inventory.filter(it=> !q || it.name.includes(q) || (it.code||'').includes(q));
+  if(list.length===0){ el.innerHTML='<div class="empty">موجودی خالیه.</div>'; return; }
+  el.innerHTML='';
+  list.forEach(it=>{
+    const karat=KARATS.find(k=>k.stamp===it.karatStamp);
+    const row=document.createElement('div'); row.className='list-row';
+    row.innerHTML=`<div class="main"><div class="t1">${it.name} <span class="badge">${karat?karat.label:''}</span></div>
+      <div class="t2">${it.code? 'کد: '+it.code+' · ':''}${faDigits(it.weight)} گرم · موجودی: ${faDigits(it.qty)} عدد</div></div>
+      <div class="actions"><button class="btn-danger" data-id="${it.id}">حذف</button></div>`;
+    row.querySelector('button').onclick=()=>{
+      if(confirm('این کالا از موجودی حذف بشه؟')){ inventory=inventory.filter(x=>x.id!==it.id); saveInventory(); renderInventory(); }
+    };
+    el.appendChild(row);
+  });
+}
+$('addInventoryBtn').onclick=()=>{
+  const name=$('invItemName').value.trim();
+  const weight=parseFloat($('invItemWeight').value)||0;
+  const qty=parseInt($('invItemQty').value)||0;
+  if(!name || weight<=0 || qty<=0){ alert('نام، وزن و تعداد رو درست وارد کن.'); return; }
+  inventory.push({id:uid(), name, code:$('invItemCode').value.trim(), karatStamp:$('invItemKarat').value, weight, qty});
+  saveInventory();
+  $('invItemName').value=''; $('invItemCode').value=''; $('invItemWeight').value=''; $('invItemQty').value=1;
+  renderInventory();
+};
+$('invSearch').addEventListener('input', renderInventory);
 
-  const tbody = $('p-items');
-  tbody.innerHTML = '';
-  invoiceItems.forEach((item, idx)=>{
-    const r = computeRow(item);
-    const tr = document.createElement('tr');
-    tr.innerHTML = `<td>${faDigits(idx+1)}</td><td>${item.desc||'-'}</td><td>${r.karatLabel}</td>
-      <td>${faDigits(item.weight||0)}</td><td>${toman(r.profit)}</td><td>${toman(r.wage)}</td><td>${toman(r.total)}</td>`;
+/* ---------- invoice numbering / print ---------- */
+function initInvoiceMeta(){
+  let seq=parseInt(localStorage.getItem('gold_inv_seq')||'1000');
+  $('invNumber').value=faDigits(seq);
+  const now=new Date();
+  $('invDate').value=now.toLocaleDateString('fa-IR');
+  $('invTime').value=now.toLocaleTimeString('fa-IR',{hour:'2-digit',minute:'2-digit'});
+}
+function bumpInvoiceSeq(){
+  let seq=parseInt(localStorage.getItem('gold_inv_seq')||'1000');
+  localStorage.setItem('gold_inv_seq', seq+1);
+  return seq;
+}
+
+function printSellInvoice(){
+  if(invoiceItems.length===0){ alert('حداقل یه قلم کالا اضافه کن.'); return; }
+  const customer = resolveCustomer('sellCustomerSelect','sellNewCustomerName');
+  const grand=invoiceItems.reduce((s,it)=>s+computeRow(it).total,0);
+  const grandProfit=invoiceItems.reduce((s,it)=>s+computeRow(it).profit,0);
+  const grandVat=invoiceItems.reduce((s,it)=>s+computeRow(it).vat,0);
+  const seq=bumpInvoiceSeq();
+
+  $('p-shop').textContent=settings.shopName||'طلافروشی';
+  $('p-tagline').textContent='فاکتور فروش طلا و جواهرات';
+  $('p-numLbl').textContent='شماره فاکتور:';
+  $('p-num').textContent=$('invNumber').value||faDigits(seq);
+  $('p-date').textContent=$('invDate').value;
+  $('p-time').textContent=$('invTime').value;
+  $('p-basepriceRow').style.display='flex';
+  $('p-baseprice').textContent=toman(parseFloat($('basePrice').value)||0);
+  $('p-custLbl').textContent='خریدار:';
+  $('p-cust').textContent=customer? customer.name : '-';
+  $('p-contact').textContent=settings.shopContact||'';
+  $('p-sign1').textContent='امضا مشتری'; $('p-sign2').textContent='مهر و امضا فروشگاه';
+
+  $('p-thead').innerHTML='<th>ردیف</th><th>شرح کالا</th><th>عیار</th><th>وزن طلا (گرم)</th><th>سود</th><th>اجرت</th><th>جمع کل با احتساب مالیات</th>';
+  const tbody=$('p-items'); tbody.innerHTML='';
+  const savedItems=[];
+  invoiceItems.forEach((item,idx)=>{
+    const r=computeRow(item);
+    savedItems.push({desc:item.desc,karatLabel:r.karatLabel,weight:item.weight,profit:r.profit,wage:r.wage,total:r.total,invItemId:item.invItemId});
+    const tr=document.createElement('tr');
+    tr.innerHTML=`<td>${faDigits(idx+1)}</td><td>${item.desc||'-'}</td><td>${r.karatLabel}</td><td>${faDigits(item.weight||0)}</td><td>${toman(r.profit)}</td><td>${toman(r.wage)}</td><td>${toman(r.total)}</td>`;
     tbody.appendChild(tr);
   });
-  // pad to at least 4 rows for a clean printed look
   for(let i=invoiceItems.length;i<4;i++){
-    const tr = document.createElement('tr');
-    tr.innerHTML = `<td>${faDigits(i+1)}</td><td></td><td></td><td></td><td></td><td></td><td></td>`;
+    const tr=document.createElement('tr');
+    tr.innerHTML=`<td>${faDigits(i+1)}</td><td></td><td></td><td></td><td></td><td></td><td></td>`;
     tbody.appendChild(tr);
   }
+  $('p-total-num').textContent=toman(grand);
+  $('p-total-words').textContent=numberToPersianWords(grand);
 
-  const grand = invoiceItems.reduce((s,it)=> s + computeRow(it).total, 0);
-  $('p-total-num').textContent = toman(grand);
-  $('p-total-words').textContent = numberToPersianWords(grand);
+  // decrement inventory for linked items
+  savedItems.forEach(si=>{
+    if(si.invItemId){
+      const inv=inventory.find(x=>x.id===si.invItemId);
+      if(inv && inv.qty>0){ inv.qty-=1; }
+    }
+  });
+  inventory = inventory.filter(x=>x.qty>0 || !savedItems.some(si=>si.invItemId===x.id));
+  saveInventory();
 
-  // bump invoice sequence
-  let seq = parseInt(localStorage.getItem('gold_inv_seq')||'1000');
-  localStorage.setItem('gold_inv_seq', seq+1);
+  invoices.push({
+    id:uid(), number:$('invNumber').value, isoDate:new Date().toISOString(), dateDisplay:$('invDate').value, time:$('invTime').value,
+    type:'sell', customerId:customer?customer.id:null, customerName:customer?customer.name:'-',
+    items:savedItems, grandTotal:grand, grandProfit, grandVat
+  });
+  saveInvoices();
 
   window.print();
+
+  invoiceItems=[];
+  renderItems();
+  initInvoiceMeta();
+  renderInventory();
+  renderInvoicesTab();
+  renderReports();
+}
+$('printInvoiceBtn').onclick=printSellInvoice;
+
+/* ---------- buy old gold ---------- */
+let buyItems=[];
+$('addBuyItemBtn').onclick=()=>{
+  buyItems.push({id:uid(), desc:'', karatStamp:'750', weight:1, deductionPct: parseFloat($('defaultDeduction').value)||7});
+  renderBuyItems();
+};
+function computeBuyRow(item){
+  const basePrice18=parseFloat($('basePrice').value)||0;
+  const karat=KARATS.find(k=>k.stamp===item.karatStamp)||KARATS[3];
+  const pricePerGram=(basePrice18/750)*karat.purity;
+  const raw=(item.weight||0)*pricePerGram;
+  const pay=raw*(1-(item.deductionPct||0)/100);
+  return {pay, karatLabel:karat.label};
+}
+function renderBuyItems(){
+  const el=$('buyItemsList'); el.innerHTML='';
+  buyItems.forEach(item=>{
+    const r=computeBuyRow(item);
+    const row=document.createElement('div'); row.className='item-row';
+    row.style.gridTemplateColumns='1.4fr 1fr 0.8fr 0.8fr auto';
+    row.innerHTML=`
+      <input type="text" placeholder="شرح کالا" value="${item.desc}" data-field="desc"/>
+      <select data-field="karatStamp">${KARATS.map(k=>`<option value="${k.stamp}" ${k.stamp===item.karatStamp?'selected':''}>${k.label}</option>`).join('')}</select>
+      <input type="number" step="0.01" placeholder="وزن" value="${item.weight}" data-field="weight"/>
+      <input type="number" step="0.5" placeholder="کسر٪" value="${item.deductionPct}" data-field="deductionPct"/>
+      <button class="del">✕</button>
+      <div class="item-meta"><span></span><span>پرداختی: ${toman(r.pay)} تومان</span></div>
+    `;
+    row.querySelectorAll('input[data-field]').forEach(inp=>{
+      inp.addEventListener('input',(e)=>{
+        const f=e.target.dataset.field;
+        item[f]=(f==='desc')?e.target.value:parseFloat(e.target.value)||0;
+        const rr=computeBuyRow(item);
+        row.querySelector('.item-meta').innerHTML=`<span></span><span>پرداختی: ${toman(rr.pay)} تومان</span>`;
+        updateBuyGrandTotal();
+      });
+    });
+    row.querySelector('select[data-field="karatStamp"]').addEventListener('change',(e)=>{ item.karatStamp=e.target.value; renderBuyItems(); });
+    row.querySelector('.del').onclick=()=>{ buyItems=buyItems.filter(x=>x.id!==item.id); renderBuyItems(); };
+    el.appendChild(row);
+  });
+  updateBuyGrandTotal();
+}
+function updateBuyGrandTotal(){
+  const grand=buyItems.reduce((s,it)=>s+computeBuyRow(it).pay,0);
+  $('buyGrandTotalOut').textContent=toman(grand);
+  $('buyGrandWordsOut').textContent=buyItems.length?numberToPersianWords(grand):'';
+}
+
+function printBuyReceipt(){
+  if(buyItems.length===0){ alert('حداقل یه قلم اضافه کن.'); return; }
+  const customer=resolveCustomer('buyCustomerSelect','buyNewCustomerName');
+  const grand=buyItems.reduce((s,it)=>s+computeBuyRow(it).pay,0);
+  const seq=bumpInvoiceSeq();
+
+  $('p-shop').textContent=settings.shopName||'طلافروشی';
+  $('p-tagline').textContent='رسید خرید طلای کهنه';
+  $('p-numLbl').textContent='شماره رسید:';
+  $('p-num').textContent=faDigits(seq);
+  const now=new Date();
+  $('p-date').textContent=now.toLocaleDateString('fa-IR');
+  $('p-time').textContent=now.toLocaleTimeString('fa-IR',{hour:'2-digit',minute:'2-digit'});
+  $('p-basepriceRow').style.display='flex';
+  $('p-baseprice').textContent=toman(parseFloat($('basePrice').value)||0);
+  $('p-custLbl').textContent='فروشنده:';
+  $('p-cust').textContent=customer?customer.name:'-';
+  $('p-contact').textContent=settings.shopContact||'';
+  $('p-sign1').textContent='امضا فروشنده'; $('p-sign2').textContent='مهر و امضا فروشگاه';
+
+  $('p-thead').innerHTML='<th>ردیف</th><th>شرح کالا</th><th>عیار</th><th>وزن (گرم)</th><th>کسر٪</th><th colspan="2">مبلغ پرداختی</th>';
+  const tbody=$('p-items'); tbody.innerHTML='';
+  const savedItems=[];
+  buyItems.forEach((item,idx)=>{
+    const r=computeBuyRow(item);
+    savedItems.push({desc:item.desc,karatLabel:r.karatLabel,weight:item.weight,deductionPct:item.deductionPct,total:r.pay});
+    const tr=document.createElement('tr');
+    tr.innerHTML=`<td>${faDigits(idx+1)}</td><td>${item.desc||'-'}</td><td>${r.karatLabel}</td><td>${faDigits(item.weight||0)}</td><td>${faDigits(item.deductionPct)}</td><td colspan="2">${toman(r.pay)}</td>`;
+    tbody.appendChild(tr);
+  });
+  $('p-total-num').textContent=toman(grand);
+  $('p-total-words').textContent=numberToPersianWords(grand);
+
+  if($('addToInventoryCheck').checked){
+    savedItems.forEach(si=>{
+      inventory.push({id:uid(), name:si.desc||'طلای کهنه', code:'', karatStamp: buyItems.find(b=>b.desc===si.desc)?.karatStamp || '750', weight:si.weight, qty:1});
+    });
+    saveInventory();
+    renderInventory();
+  }
+
+  invoices.push({
+    id:uid(), number:faDigits(seq), isoDate:new Date().toISOString(), dateDisplay:$('p-date').textContent, time:$('p-time').textContent,
+    type:'buy', customerId:customer?customer.id:null, customerName:customer?customer.name:'-',
+    items:savedItems, grandTotal:grand, grandProfit:0, grandVat:0
+  });
+  saveInvoices();
+
+  window.print();
+
+  buyItems=[];
+  renderBuyItems();
+  renderInvoicesTab();
+  renderReports();
+}
+$('printBuyBtn').onclick=printBuyReceipt;
+
+/* ---------- invoices tab ---------- */
+function renderInvoicesTab(){
+  const q=($('invoiceSearch').value||'').trim();
+  const el=$('invoicesList');
+  const list=[...invoices].reverse().filter(iv=> !q || (iv.customerName||'').includes(q) || (iv.number||'').includes(q));
+  if(list.length===0){ el.innerHTML='<div class="empty">فاکتوری ثبت نشده.</div>'; return; }
+  el.innerHTML='';
+  list.slice(0,100).forEach(iv=>{
+    const row=document.createElement('div'); row.className='list-row';
+    row.innerHTML=`<div class="main"><div class="t1"><span class="badge ${iv.type==='buy'?'buy':''}">${iv.type==='buy'?'خرید':'فروش'}</span> ${toman(iv.grandTotal)} ت</div>
+      <div class="t2">#${iv.number} · ${iv.customerName} · ${iv.dateDisplay} ${iv.time||''}</div></div>
+      <div class="actions"><button data-id="${iv.id}">چاپ مجدد</button></div>`;
+    row.querySelector('button').onclick=()=>reprintInvoice(iv);
+    el.appendChild(row);
+  });
+}
+function reprintInvoice(iv){
+  $('p-shop').textContent=settings.shopName||'طلافروشی';
+  $('p-tagline').textContent= iv.type==='buy' ? 'رسید خرید طلای کهنه':'فاکتور فروش طلا و جواهرات';
+  $('p-numLbl').textContent= iv.type==='buy' ? 'شماره رسید:':'شماره فاکتور:';
+  $('p-num').textContent=iv.number;
+  $('p-date').textContent=iv.dateDisplay; $('p-time').textContent=iv.time||'';
+  $('p-basepriceRow').style.display='none';
+  $('p-custLbl').textContent= iv.type==='buy' ? 'فروشنده:':'خریدار:';
+  $('p-cust').textContent=iv.customerName||'-';
+  $('p-contact').textContent=settings.shopContact||'';
+  $('p-sign1').textContent= iv.type==='buy' ? 'امضا فروشنده':'امضا مشتری'; $('p-sign2').textContent='مهر و امضا فروشگاه';
+
+  if(iv.type==='buy'){
+    $('p-thead').innerHTML='<th>ردیف</th><th>شرح کالا</th><th>عیار</th><th>وزن (گرم)</th><th>کسر٪</th><th colspan="2">مبلغ پرداختی</th>';
+    const tbody=$('p-items'); tbody.innerHTML='';
+    iv.items.forEach((it,idx)=>{
+      const tr=document.createElement('tr');
+      tr.innerHTML=`<td>${faDigits(idx+1)}</td><td>${it.desc||'-'}</td><td>${it.karatLabel}</td><td>${faDigits(it.weight)}</td><td>${faDigits(it.deductionPct)}</td><td colspan="2">${toman(it.total)}</td>`;
+      tbody.appendChild(tr);
+    });
+  } else {
+    $('p-thead').innerHTML='<th>ردیف</th><th>شرح کالا</th><th>عیار</th><th>وزن طلا (گرم)</th><th>سود</th><th>اجرت</th><th>جمع کل با احتساب مالیات</th>';
+    const tbody=$('p-items'); tbody.innerHTML='';
+    iv.items.forEach((it,idx)=>{
+      const tr=document.createElement('tr');
+      tr.innerHTML=`<td>${faDigits(idx+1)}</td><td>${it.desc||'-'}</td><td>${it.karatLabel}</td><td>${faDigits(it.weight)}</td><td>${toman(it.profit)}</td><td>${toman(it.wage)}</td><td>${toman(it.total)}</td>`;
+      tbody.appendChild(tr);
+    });
+  }
+  $('p-total-num').textContent=toman(iv.grandTotal);
+  $('p-total-words').textContent=numberToPersianWords(iv.grandTotal);
+  window.print();
+}
+$('invoiceSearch').addEventListener('input', renderInvoicesTab);
+
+/* ---------- reports ---------- */
+function renderReports(){
+  const todayStr=new Date().toLocaleDateString('fa-IR');
+  const monthKey=new Date().toISOString().slice(0,7);
+  function agg(filterFn){
+    const list=invoices.filter(filterFn);
+    const sell=list.filter(iv=>iv.type==='sell');
+    const buy=list.filter(iv=>iv.type==='buy');
+    return {
+      sellTotal:sell.reduce((s,iv)=>s+iv.grandTotal,0),
+      sellProfit:sell.reduce((s,iv)=>s+(iv.grandProfit||0),0),
+      sellVat:sell.reduce((s,iv)=>s+(iv.grandVat||0),0),
+      buyTotal:buy.reduce((s,iv)=>s+iv.grandTotal,0),
+      sellCount:sell.length, buyCount:buy.length
+    };
+  }
+  const today=agg(iv=>iv.dateDisplay===todayStr);
+  const month=agg(iv=>(iv.isoDate||'').slice(0,7)===monthKey);
+  const all=agg(()=>true);
+
+  function cards(a){
+    return `<div class="report-card"><div class="v">${toman(a.sellTotal)}</div><div class="l">جمع فروش (تومان)</div></div>
+      <div class="report-card"><div class="v">${toman(a.sellProfit)}</div><div class="l">سود فروش (تومان)</div></div>
+      <div class="report-card"><div class="v">${toman(a.buyTotal)}</div><div class="l">جمع خرید کهنه (تومان)</div></div>
+      <div class="report-card"><div class="v">${faDigits(a.sellCount)}/${faDigits(a.buyCount)}</div><div class="l">تعداد فاکتور فروش/خرید</div></div>`;
+  }
+  $('reportToday').innerHTML=cards(today);
+  $('reportMonth').innerHTML=cards(month);
+  $('reportAll').innerHTML=cards(all);
+}
+
+/* ---------- settings ---------- */
+function loadSettingsUI(){
+  $('shopName').value=settings.shopName||'';
+  $('shopContact').value=settings.shopContact||'';
+  $('apiKey').value=settings.apiKey||'';
+}
+['shopName','shopContact','apiKey'].forEach(id=>{
+  $(id).addEventListener('input', ()=>{
+    settings[id]=$(id).value;
+    saveSettings();
+  });
+});
+$('fetchPriceBtn').onclick=async ()=>{
+  const key=$('apiKey').value.trim();
+  const statusEl=$('priceStatus');
+  if(!key){ statusEl.textContent='اول کلید API رو وارد کن.'; statusEl.className='status-msg err'; return; }
+  statusEl.textContent='در حال دریافت...'; statusEl.className='status-msg';
+  try{
+    const res=await fetch('https://www.goldapi.io/api/XAU/USD', { headers:{ 'x-access-token': key, 'Content-Type':'application/json' } });
+    if(!res.ok) throw new Error('پاسخ نامعتبر از سرویس');
+    const data=await res.json();
+    if(data && data.price){
+      $('ouncePrice').value = data.price;
+      updateMazane();
+      statusEl.textContent = 'قیمت اونس دریافت شد: '+toman(data.price)+' دلار. حالا نرخ دلار رو وارد کن و اعمال بزن.';
+      statusEl.className='status-msg ok';
+    } else {
+      throw new Error('قیمت در پاسخ پیدا نشد');
+    }
+  }catch(e){
+    statusEl.textContent='اتصال ناموفق بود (ممکنه مرورگر CORS رو مسدود کرده باشه). از روش دستی توی تب محاسبه استفاده کن.';
+    statusEl.className='status-msg err';
+  }
 };
 
 /* ---------- tabs ---------- */
 document.querySelectorAll('.tab').forEach(tab=>{
-  tab.onclick = ()=>{
+  tab.onclick=()=>{
     document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
     tab.classList.add('active');
-    ['calc','invoice','history'].forEach(name=>{
-      $('tab-'+name).style.display = (name===tab.dataset.tab) ? 'block' : 'none';
+    ['calc','sell','buy','inventory','customers','invoices','reports','settings'].forEach(name=>{
+      $('tab-'+name).style.display=(name===tab.dataset.tab)?'block':'none';
     });
-    if(tab.dataset.tab === 'history') renderHist();
+    if(tab.dataset.tab==='customers') renderCustomers();
+    if(tab.dataset.tab==='inventory') renderInventory();
+    if(tab.dataset.tab==='invoices') renderInvoicesTab();
+    if(tab.dataset.tab==='reports') renderReports();
+    if(tab.dataset.tab==='sell'){ refreshCustomerSelects(); renderItems(); }
+    if(tab.dataset.tab==='buy'){ refreshCustomerSelects(); renderBuyItems(); }
   };
 });
 
+/* ---------- init ---------- */
 renderStamps();
 calc();
 updateMazane();
 renderHist();
 initInvoiceMeta();
+fillInvKaratSelect();
+refreshCustomerSelects();
 if(invoiceItems.length===0){ invoiceItems.push(newItemFromCalc()); }
 renderItems();
+loadSettingsUI();
+renderInventory();
+renderCustomers();
+renderInvoicesTab();
+renderReports();
 
 if('serviceWorker' in navigator){
-  window.addEventListener('load', ()=>{
-    navigator.serviceWorker.register('service-worker.js').catch(()=>{});
-  });
+  window.addEventListener('load', ()=>{ navigator.serviceWorker.register('service-worker.js').catch(()=>{}); });
 }
 </script>
 </body>
