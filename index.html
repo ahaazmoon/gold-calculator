@@ -85,8 +85,18 @@
   @media print{
     body *{visibility:hidden;}
     #printArea, #printArea *{visibility:visible;}
-    #printArea{display:block !important;position:absolute;top:0;right:0;left:0;margin:0;}
+    #printArea{display:block !important;position:absolute;top:0;right:0;left:0;margin:0;padding:0;}
     .no-print{display:none !important;}
+    .inv-paper{background:#ffffff !important;color:#000000 !important;border:2px solid #000000 !important;box-shadow:none !important;}
+    .inv-top h2{color:#000000 !important;}
+    .inv-top .tagline{color:#333333 !important;}
+    .inv-buyer{background:#ffffff !important;border:1px solid #000000 !important;}
+    table.inv-table th{background:#e5e5e5 !important;color:#000000 !important;border:1px solid #000000 !important;}
+    table.inv-table td{border:1px solid #000000 !important;color:#000000 !important;}
+    .inv-total-box{background:#ffffff !important;border:1px solid #000000 !important;}
+    .inv-total-box .num{color:#000000 !important;}
+    .inv-sign div{color:#000000 !important;border-top:1px solid #000000 !important;}
+    .stamp-box{border:1px dashed #000000 !important;color:#000000 !important;}
   }
   .inv-paper{background:#FBF3DC;color:#3A2E10;padding:20px;border:3px solid #C9A24B;border-radius:4px;font-family:'Vazirmatn','IBM Plex Sans Arabic',sans-serif;}
   .inv-top{text-align:center;border-bottom:2px solid #C9A24B;padding-bottom:10px;margin-bottom:14px;}
@@ -501,29 +511,63 @@ $('clearHistBtn').onclick=()=>{ if(confirm('تاریخچه پاک بشه؟')) sa
 /* ---------- sell invoice items ---------- */
 let invoiceItems=[];
 function computeRow(item){
-  const basePrice18=parseFloat($('basePrice').value)||0;
-  const wagePct=parseFloat($('wagePct').value)||0;
-  const profitPct=parseFloat($('profitPct').value)||0;
-  const vatPct=parseFloat($('vatPct').value)||0;
-  const karat=KARATS.find(k=>k.stamp===item.karatStamp)||KARATS[3];
-  const pricePerGram=(basePrice18/750)*karat.purity;
-  const base=(item.weight||0)*pricePerGram;
-  const wage=base*(wagePct/100);
-  const profit=(base+wage)*(profitPct/100);
-  const vat=(wage+profit)*(vatPct/100);
-  const total=base+wage+profit+vat;
-  return {base,wage,profit,vat,total,karatLabel:karat.label};
+  const basePrice18 = item.basePrice18 || parseFloat($('basePrice').value) || 0;
+  const wagePct = item.wagePct !== undefined ? item.wagePct : (parseFloat($('wagePct').value) || 0);
+  const profitPct = item.profitPct !== undefined ? item.profitPct : (parseFloat($('profitPct').value) || 0);
+  const vatPct = item.vatPct !== undefined ? item.vatPct : (parseFloat($('vatPct').value) || 0);
+  
+  const karat = KARATS.find(k=>k.stamp===item.karatStamp) || KARATS[3];
+  const pricePerGram = (basePrice18 / 750) * karat.purity;
+  const base = (item.weight || 0) * pricePerGram;
+  const wage = base * (wagePct / 100);
+  const profit = (base + wage) * (profitPct / 100);
+  const vat = (wage + profit) * (vatPct / 100);
+  const total = base + wage + profit + vat;
+  return {base, wage, profit, vat, total, karatLabel: karat.label};
 }
 function newItemFromCalc(){
   const weight=parseFloat($('weight').value)||0;
-  return {id:uid(), desc:'', karatStamp:selectedKarat.stamp, weight, invItemId:null};
+  return {
+    id:uid(), 
+    desc:'', 
+    karatStamp:selectedKarat.stamp, 
+    weight, 
+    invItemId:null,
+    basePrice18: parseFloat($('basePrice').value) || 0,
+    wagePct: parseFloat($('wagePct').value) || 0,
+    profitPct: parseFloat($('profitPct').value) || 0,
+    vatPct: parseFloat($('vatPct').value) || 0
+  };
 }
 $('toInvoiceBtn').onclick=()=>{ invoiceItems.push(newItemFromCalc()); renderItems(); document.querySelector('.tab[data-tab="sell"]').click(); };
-$('addItemBtn').onclick=()=>{ invoiceItems.push({id:uid(), desc:'', karatStamp:'750', weight:1, invItemId:null}); renderItems(); };
+$('addItemBtn').onclick=()=>{ 
+  invoiceItems.push({
+    id:uid(), 
+    desc:'', 
+    karatStamp:'750', 
+    weight:1, 
+    invItemId:null,
+    basePrice18: parseFloat($('basePrice').value) || 0,
+    wagePct: parseFloat($('wagePct').value) || 0,
+    profitPct: parseFloat($('profitPct').value) || 0,
+    vatPct: parseFloat($('vatPct').value) || 0
+  }); 
+  renderItems(); 
+};
 $('addFromInvBtn').onclick=()=>{
   if(inventory.length===0){ alert('موجودی خالیه.'); return; }
   const it=inventory[0];
-  invoiceItems.push({id:uid(), desc:it.name, karatStamp:it.karatStamp, weight:it.weight, invItemId:it.id});
+  invoiceItems.push({
+    id:uid(), 
+    desc:it.name, 
+    karatStamp:it.karatStamp, 
+    weight:it.weight, 
+    invItemId:it.id,
+    basePrice18: parseFloat($('basePrice').value) || 0,
+    wagePct: parseFloat($('wagePct').value) || 0,
+    profitPct: parseFloat($('profitPct').value) || 0,
+    vatPct: parseFloat($('vatPct').value) || 0
+  });
   renderItems();
 };
 function updateGrandTotal(){
@@ -563,8 +607,14 @@ function renderItems(){
     if(invPick){
       invPick.addEventListener('change',(e)=>{
         const inv=inventory.find(x=>x.id===e.target.value);
-        if(inv){ item.desc=inv.name; item.karatStamp=inv.karatStamp; item.weight=inv.weight; item.invItemId=inv.id; }
-        else{ item.invItemId=null; }
+        if(inv){ 
+          item.desc=inv.name; 
+          item.karatStamp=inv.karatStamp; 
+          item.weight=inv.weight; 
+          item.invItemId=inv.id; 
+        } else { 
+          item.invItemId=null; 
+        }
         renderItems();
       });
     }
@@ -701,13 +751,27 @@ function printSellInvoice(){
   $('p-thead').innerHTML='<th>ردیف</th><th>شرح کالا</th><th>عیار</th><th>وزن طلا (گرم)</th><th>سود</th><th>اجرت</th><th>جمع کل با احتساب مالیات</th>';
   const tbody=$('p-items'); tbody.innerHTML='';
   const savedItems=[];
+  
   invoiceItems.forEach((item,idx)=>{
     const r=computeRow(item);
-    savedItems.push({desc:item.desc,karatLabel:r.karatLabel,weight:item.weight,profit:r.profit,wage:r.wage,total:r.total,invItemId:item.invItemId});
+    savedItems.push({
+      desc:item.desc,
+      karatLabel:r.karatLabel,
+      weight:item.weight,
+      profit:r.profit,
+      wage:r.wage,
+      total:r.total,
+      invItemId:item.invItemId,
+      basePrice18: item.basePrice18,
+      wagePct: item.wagePct,
+      profitPct: item.profitPct,
+      vatPct: item.vatPct
+    });
     const tr=document.createElement('tr');
     tr.innerHTML=`<td>${faDigits(idx+1)}</td><td>${item.desc||'-'}</td><td>${r.karatLabel}</td><td>${faDigits(item.weight||0)}</td><td>${toman(r.profit)}</td><td>${toman(r.wage)}</td><td>${toman(r.total)}</td>`;
     tbody.appendChild(tr);
   });
+  
   for(let i=invoiceItems.length;i<4;i++){
     const tr=document.createElement('tr');
     tr.innerHTML=`<td>${faDigits(i+1)}</td><td></td><td></td><td></td><td></td><td></td><td></td>`;
@@ -716,14 +780,14 @@ function printSellInvoice(){
   $('p-total-num').textContent=toman(grand);
   $('p-total-words').textContent=numberToPersianWords(grand);
 
-  // decrement inventory for linked items
+  // کسر از انبار به صورت امن قبل از اجرای چاپ فاکتور
   savedItems.forEach(si=>{
     if(si.invItemId){
       const inv=inventory.find(x=>x.id===si.invItemId);
       if(inv && inv.qty>0){ inv.qty-=1; }
     }
   });
-  inventory = inventory.filter(x=>x.qty>0 || !savedItems.some(si=>si.invItemId===x.id));
+  inventory = inventory.filter(x=>x.qty>0);
   saveInventory();
 
   invoices.push({
@@ -733,14 +797,15 @@ function printSellInvoice(){
   });
   saveInvoices();
 
-  window.print();
-
-  invoiceItems=[];
-  renderItems();
-  initInvoiceMeta();
-  renderInventory();
-  renderInvoicesTab();
-  renderReports();
+  setTimeout(() => {
+    window.print();
+    invoiceItems=[];
+    renderItems();
+    initInvoiceMeta();
+    renderInventory();
+    renderInvoicesTab();
+    renderReports();
+  }, 300);
 }
 $('printInvoiceBtn').onclick=printSellInvoice;
 
