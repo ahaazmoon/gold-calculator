@@ -9,6 +9,7 @@
 <link rel="icon" href="icons/icon-192.png" />
 <link rel="apple-touch-icon" href="icons/icon-192.png" />
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;700;800&family=IBM+Plex+Sans+Arabic:wght@400;500;600&display=swap" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <style>
   :root{
     --bg:#1B1712; --surface:#241E15; --surfaceAlt:#2B2216;
@@ -317,8 +318,21 @@
       </div>
     </div>
     <div class="card">
+      <div class="section-title">خروجی و پشتیبان‌گیری</div>
+      <div class="note">
+        اطلاعات فقط روی همین گوشی ذخیره می‌شن. برای اینکه از بین نرن (مثلاً موقع پاک‌شدن cache مرورگر یا عوض‌کردن گوشی)، هر چند وقت یه‌بار «پشتیبان کامل» بگیر. فایل اکسل فقط برای دیدن و چاپه؛ اگه بخوای اطلاعات رو برگردونی، از فایل پشتیبان (JSON) استفاده کن.
+      </div>
+      <button class="btn btn-secondary" id="exportExcelBtn">📊 خروجی اکسل (موجودی، مشتریان، فاکتورها)</button>
+      <button class="btn btn-secondary" id="exportBackupBtn">💾 دانلود پشتیبان کامل</button>
+      <label class="btn btn-secondary" style="display:block;text-align:center;cursor:pointer;">
+        ♻️ بازیابی از فایل پشتیبان
+        <input type="file" id="restoreInput" accept="application/json" style="display:none;"/>
+      </label>
+      <div id="backupStatus" class="status-msg"></div>
+    </div>
+    <div class="card">
       <div class="section-title">داده‌ها</div>
-      <div class="note">همه‌ی اطلاعات (موجودی، مشتریان، فاکتورها) روی همین گوشی ذخیره می‌شن، نه روی سرور. اگه cache مرورگر پاک بشه، این اطلاعات از بین می‌رن. برای خروجی گرفتن، بگو از کلود بخوام یه دکمه‌ی «خروجی اکسل» هم اضافه کنم.</div>
+      <div class="note">همه‌ی اطلاعات (موجودی، مشتریان، فاکتورها) روی همین گوشی ذخیره می‌شن، نه روی سرور. اگه cache مرورگر پاک بشه، این اطلاعات از بین می‌رن — برای همین بالا یه گزینه‌ی پشتیبان‌گیری اضافه شده.</div>
     </div>
   </div>
 
@@ -917,6 +931,85 @@ function renderReports(){
   $('reportMonth').innerHTML=cards(month);
   $('reportAll').innerHTML=cards(all);
 }
+
+/* ---------- export / backup ---------- */
+function karatLabelOf(stamp){ const k=KARATS.find(x=>x.stamp===stamp); return k?k.label:stamp; }
+
+$('exportExcelBtn').onclick=()=>{
+  if(typeof XLSX==='undefined'){ alert('کتابخانه‌ی اکسل بارگذاری نشد. اتصال اینترنت رو چک کن.'); return; }
+  const wb=XLSX.utils.book_new();
+
+  const invRows=inventory.map(it=>({
+    'نام کالا':it.name, 'کد':it.code||'', 'عیار':karatLabelOf(it.karatStamp), 'وزن هر عدد (گرم)':it.weight, 'تعداد موجود':it.qty
+  }));
+  XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(invRows.length?invRows:[{'نام کالا':''}]), 'موجودی');
+
+  const custRows=customers.map(c=>{
+    const st=customerStats(c.id);
+    return {'نام':c.name, 'تماس':c.phone||'', 'یادداشت':c.notes||'', 'تعداد فاکتور':st.count, 'جمع خرید (تومان)':Math.round(st.totalSell)};
+  });
+  XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(custRows.length?custRows:[{'نام':''}]), 'مشتریان');
+
+  const invoiceRows=invoices.map(iv=>({
+    'شماره':iv.number, 'نوع':iv.type==='buy'?'خرید':'فروش', 'مشتری':iv.customerName||'',
+    'تاریخ':iv.dateDisplay, 'ساعت':iv.time||'', 'تعداد اقلام':iv.items.length, 'جمع کل (تومان)':Math.round(iv.grandTotal)
+  }));
+  XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(invoiceRows.length?invoiceRows:[{'شماره':''}]), 'فاکتورها');
+
+  const itemRows=[];
+  invoices.forEach(iv=>{
+    iv.items.forEach(it=>{
+      itemRows.push({'شماره فاکتور':iv.number, 'نوع':iv.type==='buy'?'خرید':'فروش', 'شرح کالا':it.desc||'', 'عیار':it.karatLabel||'', 'وزن (گرم)':it.weight, 'مبلغ (تومان)':Math.round(it.total)});
+    });
+  });
+  XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(itemRows.length?itemRows:[{'شماره فاکتور':''}]), 'اقلام فاکتورها');
+
+  XLSX.writeFile(wb, 'gold-shop-export-'+new Date().toISOString().slice(0,10)+'.xlsx');
+};
+
+function downloadBlob(content, filename, type){
+  const blob=new Blob([content], {type});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');
+  a.href=url; a.download=filename;
+  document.body.appendChild(a); a.click(); document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+}
+
+$('exportBackupBtn').onclick=()=>{
+  const backup={
+    version:1, exportedAt:new Date().toISOString(),
+    gold_inventory_v1:inventory, gold_customers_v1:customers, gold_invoices_v1:invoices,
+    gold_settings_v1:settings, gold_calc_history:loadHist(),
+    gold_inv_seq: localStorage.getItem('gold_inv_seq')||'1000'
+  };
+  downloadBlob(JSON.stringify(backup,null,2), 'gold-shop-backup-'+new Date().toISOString().slice(0,10)+'.json', 'application/json');
+};
+
+$('restoreInput').addEventListener('change',(e)=>{
+  const file=e.target.files[0];
+  if(!file) return;
+  const statusEl=$('backupStatus');
+  const reader=new FileReader();
+  reader.onload=()=>{
+    try{
+      const data=JSON.parse(reader.result);
+      if(!data || typeof data!=='object') throw new Error('فایل نامعتبر');
+      if(!confirm('بازیابی، اطلاعات فعلی این گوشی رو با اطلاعات فایل پشتیبان جایگزین می‌کنه. ادامه بدم؟')) return;
+      ['gold_inventory_v1','gold_customers_v1','gold_invoices_v1','gold_settings_v1','gold_calc_history'].forEach(key=>{
+        if(data[key]!==undefined) LS.set(key, data[key]);
+      });
+      if(data.gold_inv_seq) localStorage.setItem('gold_inv_seq', data.gold_inv_seq);
+      statusEl.textContent='بازیابی موفق بود. صفحه دوباره بارگذاری می‌شه...';
+      statusEl.className='status-msg ok';
+      setTimeout(()=>location.reload(), 1200);
+    }catch(err){
+      statusEl.textContent='فایل پشتیبان معتبر نیست.';
+      statusEl.className='status-msg err';
+    }
+  };
+  reader.readAsText(file);
+});
 
 /* ---------- settings ---------- */
 function loadSettingsUI(){
